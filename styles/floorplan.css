@@ -1,0 +1,162 @@
+/* apply a natural box layout model to all elements, but allowing components to change */
+html {
+    box-sizing: border-box;
+    overflow-y: hidden;
+}
+*, *:before, *:after {
+    box-sizing: inherit;
+    overflow-y: inherit;
+}
+
+body {
+	width: 100%;
+    height: 100%;
+	font-family: 'Arial', sans-serif;
+	padding-top: 0px;
+}
+
+/*50 + 20*/
+.navbar {
+    min-height: 50px;
+	position: relative;
+    top: 0px !important;
+    margin-bottom: 0px;
+}
+
+.app-container {
+	position: relative;
+    width: calc(100% - 40px);
+    height: calc(100% - 70px - 20px - 80px);
+    max-height: 95% !important;
+    border: ridge 4px darkgrey;
+    border-radius: 9px;
+    overflow: hidden;
+    margin: 20px auto;
+    text-align: center;
+}
+
+
+#background-image {
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    display: block;
+/*    text-align: center;*/
+    vertical-align: middle;
+    position: relative;
+    transform-origin: center;
+    opacity: 1;
+    
+    /* Animations for zooming and dragging. Change speeds here. */
+    -webkit-transition: transform 150ms ease-out, opacity 222ms ease-in 150ms;
+    -moz-transition: transform 150ms ease-out, opacity 222ms ease-in 150ms;
+    -o-transition: transform 150ms ease-out, opacity 222ms ease-in 150ms;
+    transition: transform 150ms ease-out, opacity 222ms ease-in 150ms;
+}
+
+#background-image.invisible {
+    opacity: 0;
+}
+
+/*30 + 30 + 20*/
+.footer {
+    display: block;
+    position: relative;
+    width: 100%;
+    padding-top: 30px;
+    padding-bottom: 20px;
+    height: 80px;
+    bottom: 0;
+    margin-top: 0px;
+}
+    
+.booth {
+    border: 1px solid black;
+    border-radius: 2px;
+    text-align: left;
+    padding: 0;
+    margin: 0;
+    z-index: 2;
+    position: absolute;
+    display: block;
+    font-size: 10px;
+    cursor: pointer;
+}
+
+/*
+.booth[data-available="true"] {
+    background-color: greenyellow;
+}
+.booth[data-available="false"] {
+    background-color: palevioletred;
+}
+*/
+
+.booth-number {
+    font-size: 10px;
+    text-align: center;
+    padding: 0px;
+    margin: 0px;
+}
+
+.company-name {
+    font-size: 10px;
+    padding: 0px 2px;
+    margin: 0px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+.company-logo {
+    
+}
+.company-information {
+    
+}
+
+.body-container {
+    width: 100%;
+    max-width: 100%;
+    min-width: 100%;
+    height: 100%;
+    max-height: 100%;
+    min-height: 100%;
+    margin: 0px!important;
+    padding: 0px!important;
+    top: 0!important;
+}
+
+.zoom-controls {
+    z-index: 100;
+    position: absolute;
+    display: inline-block;
+    bottom: 20px;
+    right: 20px;
+    width: 40px;
+    height: 80px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.zoom-controls span {
+    display: block;
+    width: 100%;
+    height: 50%;
+    z-index: 101;
+    font-size: 24px;
+    line-height: 1.4;
+    border-color: darkgrey;
+    border-width: 4px 4px;
+    border-style: outset;
+    cursor: pointer;
+}
+
+.zoom-controls span:active {
+    border-style: inset;
+    border-width: 2px 2px;
+}
+
+.zoom-controls span:nth-child(2) {
+/*    border-top-width: 0px;*/
+    line-height: 1.4;
+}
+

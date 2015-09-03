@@ -1,0 +1,93 @@
+<html>
+
+<head>
+    <title>Floor Plan</title>
+    <!-- These are the latest compiled and minified styles
+    from the Bootstrap framework. They are served over a CDN
+    for optimum client speed and to reduce your server load. -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Optional theme -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css" rel="stylesheet">
+    <!-- Local Styles -->
+    <link rel="stylesheet" href="node_modules/ionicons.min.css">
+    <link rel="stylesheet" href="node_modules/justified-nav.css">
+    <link rel="stylesheet" href="styles/floorplan.css">
+    <link rel="stylesheet" href="styles/colors.css">
+</head>
+
+<body data-color-palette="color1">
+    <div class="body-container">
+        <!-- Navigation -->
+        <nav class="navbar navbar-inverse navbar-fixed-top" data-color-palette="color3">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="#">Project name</a>
+                </div>
+                <div id="navbar" class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li class="active"><a href="#">Home</a></li>
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <!--/.nav-collapse -->
+            </div>
+        </nav>
+
+        <!-- App content -->
+        <!--     <div class="container"> -->
+        <div class="app-container">
+            <div id="background-image" class="invisible"></div>
+            <div class="zoom-controls" data-color-palette="color3">
+                <span id="zoom-in" class="glyphicon glyphicon-plus"></span>
+                <span id="zoom-out" class="glyphicon glyphicon-minus"></span>
+            </div>
+        </div>
+        <!--    </div>-->
+
+        <footer class="footer" data-color-palette="color3">
+            <div class="container">
+                <p class="text-muted">Footer Content.</p>
+            </div>
+        </footer>
+    </div>
+    <!-- Latest compiled and minified JavaScript placed at
+    the end of the document so the pages load faster. -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="http://getbootstrap.com/assets/js/ie10-viewport-bug-workaround.js"></script>
+    <!-- Local Scripts -->
+    <script src="javascript/dummyData.js"></script>
+    <script src="javascript/Floorplan.js"></script>
+</body>
+<script>
+    // Only runs this JS once all resources have been downloaded over the network
+    $(document).ready(function() {
+        /**
+         * Set the dimensions of the natural W & H
+         * of the background image,
+         * as well as the relative URL.
+         **/
+        var backgroundImageData = {
+            imageWidth: 1438,
+            imageHeight: 833,
+            imageURL: 'images/venuepla1.jpg'
+        };
+        
+        // Populate arrayOfBoothData with 
+        var arrayOfBoothData = [];
+        for (var key in window.dummyData) {
+            arrayOfBoothData.push(window.dummyData[key]);
+        };
+
+        window.floorplan = new Floorplan(backgroundImageData, arrayOfBoothData);
+    }); // end document.ready()
+</script>
+
+</html>

@@ -1,0 +1,91 @@
+/**
+ * Dedicated CSS script for colors.
+ * I recommend Adobe Kuler for palletes:
+ *   https://color.adobe.com/explore/most-popular/?time=month
+ *
+ * Check out:
+ *   https://color.adobe.com/Tradely-color-theme-6628370/
+ *   https://color.adobe.com/Corporate-Blues-color-theme-6612323/
+ **/
+
+/*
+Tradely:
+    color: #2c3e50;
+    color: #243240;
+
+    color: #e74c3c;
+    color: #c74333;
+
+    color: #ecf0f1;
+    color: #d4dfe2;
+
+    color: #3498db;
+    color: #2e8ac7;
+
+    color: #2980b9;
+    color: #2472a5;
+
+
+
+Corporate Blues:
+    color: #ffffff;
+    color: #76777a;
+    color: #2795c0;
+    color: #002f3f;
+    color: #06658d;
+*/
+
+[data-color-palette="color1"] {
+    background-image: -webkit-linear-gradient(top,#2c3e50 0,#243240 100%); 
+    background-image:      -o-linear-gradient(top,#2c3e50 0,#243240 100%);
+    background-image:        -webkit-gradient(linear,left top,left bottom,from(#2c3e50),to(#243240)); 
+    background-image:         linear-gradient(to bottom,#2c3e50 0,#243240 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff2c3e50', endColorstr='#ff243240', GradientType=0);
+    filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+    background-repeat: repeat-x;
+}
+
+
+[data-color-palette="color2"] {
+    background-image: -webkit-linear-gradient(top,#e74c3c 0,#c74333 100%); 
+    background-image:      -o-linear-gradient(top,#e74c3c 0,#c74333 100%);
+    background-image:        -webkit-gradient(linear,left top,left bottom,from(#e74c3c),to(#c74333)); 
+    background-image:         linear-gradient(to bottom,#e74c3c 0,#c74333 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffe74c3c', endColorstr='#ffc74333', GradientType=0);
+    filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+    background-repeat: repeat-x;
+}
+
+
+
+[data-color-palette="color3"] {
+    background-image: -webkit-linear-gradient(top,#ecf0f1 0,#d4dfe2 100%); 
+    background-image:      -o-linear-gradient(top,#ecf0f1 0,#d4dfe2 100%);
+    background-image:        -webkit-gradient(linear,left top,left bottom,from(#ecf0f1),to(#d4dfe2)); 
+    background-image:         linear-gradient(to bottom,#ecf0f1 0,#d4dfe2 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffecf0f1', endColorstr='#ffd4dfe2', GradientType=0);
+    filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+    background-repeat: repeat-x;
+}
+
+[data-color-palette="color4"] {
+    background-image: -webkit-linear-gradient(top,#3498db 0,#2e8ac7 100%); 
+    background-image:      -o-linear-gradient(top,#3498db 0,#2e8ac7 100%);
+    background-image:        -webkit-gradient(linear,left top,left bottom,from(#3498db),to(#2e8ac7)); 
+    background-image:         linear-gradient(to bottom,#3498db 0,#2e8ac7 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff3498db', endColorstr='#ff2e8ac7', GradientType=0);
+    filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+    background-repeat: repeat-x;
+}
+
+[data-color-palette="color5"] {
+    background-image: -webkit-linear-gradient(top,#2980b9 0,#2472a5 100%); 
+    background-image:      -o-linear-gradient(top,#2980b9 0,#2472a5 100%);
+    background-image:        -webkit-gradient(linear,left top,left bottom,from(#2980b9),to(#2472a5)); 
+    background-image:         linear-gradient(to bottom,#2980b9 0,#2472a5 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff2980b9', endColorstr='#ff2472a5', GradientType=0);
+    filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+    background-repeat: repeat-x;
+}
+
+

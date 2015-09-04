@@ -1,0 +1,23 @@
+{
+  "name": "floorplan",
+  "version": "1.0.0",
+  "description": "Front-end interface for booth and floorplan layout with SOAP requests.",
+  "main": "index.html",
+  "dependencies": {
+    "jquery.soap": "^1.6.7"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SterlingVix/floorplan.git"
+  },
+  "author": "Aaron Melocik <amelocik@gmail.com> (http://beautifulhivemind.org/)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SterlingVix/floorplan/issues"
+  },
+  "homepage": "https://github.com/SterlingVix/floorplan"
+}

@@ -77,7 +77,7 @@ body {
     z-index: 2;
     position: absolute;
     display: block;
-    font-size: 10px;
+    font-size: inherit;
     cursor: pointer;
 }
 
@@ -91,13 +91,13 @@ body {
 */
 
 .booth-number {
-    font-size: 10px;
+    font-size: inherit;
     text-align: center;
     padding: 0px;
     margin: 0px;
 }
 .company-name {
-    font-size: 10px;
+    font-size: inherit;
     padding: 0px 2px;
     margin: 0px;
     text-overflow: ellipsis;
@@ -147,3 +147,66 @@ body {
     /*    border-top-width: 0px;*/
     line-height: 1.4;
 }
+
+
+/**
+ * Modal Styling in addition to Bootstrap's styling
+ **/
+.modal-dialog {}
+
+.modal-dialog .modal-content {}
+
+.modal-dialog .modal-content .modal-header {
+/*    height: 6em;*/
+}
+
+.modal-dialog .modal-content .modal-header button.close {}
+
+.modal-dialog .modal-content .modal-header h4.modal-title {
+    font-size: 2em;
+/*    z-index: 10;*/
+}
+
+/*.modal-dialog .modal-content .modal-header div.modal-image-container {*/
+.modal-dialog .modal-content .modal-body div.modal-image-container {
+    position: relative;
+    float: right;
+    top: 0;
+    right: 0;
+    display: inline-block;
+    height: 5.9em;
+    min-width: 40%;
+    width: 50%;
+    max-width: 60%;
+    overflow: hidden;
+    background-repeat: no-repeat;
+    background-position: right;
+    background-size: contain;
+    z-index: 1;
+}
+
+/*.modal-dialog .modal-content .modal-header div.modal-image-container image.company-logo {*/
+.modal-dialog .modal-content .modal-body div.modal-image-container image.company-logo {
+/*
+    height: auto;
+    width: 100%;
+    margin: 0 auto;
+*/
+}
+
+.modal-dialog .modal-content .modal-body {}
+
+.modal-dialog .modal-content .modal-body p.company-personell {
+    width: 50%;
+}
+
+.modal-dialog .modal-content .modal-body p.company-personell span.exhibitors {}
+
+.modal-dialog .modal-content .modal-body p.company-information {}
+
+.modal-dialog .modal-content .modal-footer {}
+
+.modal-dialog .modal-content .modal-footer button.btn {}
+
+.modal-dialog .modal-content .modal-footer button.btn span.glyphicon {}
+

@@ -210,3 +210,7 @@ body {
 
 .modal-dialog .modal-content .modal-footer button.btn span.glyphicon {}
 
+.tooltip.top {
+    transform: unset!important;
+    
+}

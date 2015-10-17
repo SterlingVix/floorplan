@@ -138,8 +138,66 @@ Floorplan.prototype.createBoothElements = function (boothDataArray) {
     for (var i = 0; i < boothDataArray.length; i++) {
         var thisBoothData = boothDataArray[i];
         var boothElement = $('<div class="alert booth" data-company="' + thisBoothData.company +
-            '" data-toggle="modal" data-target="#modal-' + thisBoothData.boothNumber + '"></div>');
+//            '" data-toggle="modal" data-target="#modal-' + thisBoothData.boothNumber + '"></div>'); // MODAL code
+//            '" data-toggle="tooltip" data-target="#modal-' + thisBoothData.boothNumber + '" title="' + thisBoothData.company + '"></div>'); // TOOLTIP code
+            '" data-toggle="modal" data-target="#modal-' + thisBoothData.boothNumber + '" title="' + thisBoothData.company + '" data-content="At this booth:' + (thisBoothData.personell.join(', ')).toString() + '"></div>'); // MODAL + POPOVER code
+        
+        // Instantiate tooltip on this element
+//        boothElement.tooltip({container: 'body'});
+        boothElement.popover({container: 'body'});
 
+        
+//        boothElement.on('mouseover', function(event) { $(event.target).popover('show'); }); // end on(mouseover)
+//        boothElement.on('mouseenter', function(event) { $(event.target).popover('show'); }); // end on(mouseover)
+//        
+//        boothElement.on('mouseout', function(event) { $(event.target).popover('hide'); }); // end on(mouseover)
+//        boothElement.on('mouseleave', function(event) { $(event.target).popover('hide'); }); // end on(mouseover)
+        
+        
+        
+        // TODO: Try each of these combos and see which works.
+        // Only works on root element, not on text, too. Can be solved with "pointer-events: none" on text elements?
+        boothElement.on('mouseover', function(event) { $(event.target).popover('show'); }); boothElement.on('mouseout', function(event) { $(event.target).popover('hide'); }); 
+
+        // boothElement.on('mouseover', function(event) { $(event.target).popover('show'); }); boothElement.on('mouseleave', function(event) { $(event.target).popover('hide'); }); 
+
+        // boothElement.on('mouseenter', function(event) { $(event.target).popover('show'); }); boothElement.on('mouseout', function(event) { $(event.target).popover('hide'); }); 
+
+        // boothElement.on('mouseenter', function(event) { $(event.target).popover('show'); }); boothElement.on('mouseleave', function(event) { $(event.target).popover('hide'); });  
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         // Add colors from Bootstrap's alert models
         if (thisBoothData.isAvailable) {
             //            boothElement.addClass('alert-success');
@@ -344,6 +402,17 @@ Floorplan.prototype.createModal = function (boothData) {
 }; // end createModal()
 
 
+Floorplan.prototype.createTooltip = function (boothData) {
+//    <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="Tooltip on top">Tooltip on top</button>
+    
+    $(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+})
+    
+    $('#example').tooltip(options)
+    
+    
+}; // end createTooltip()
 /**
 Floorplan.prototype.createModal = function (boothData) {    
     // If defined, cast personell array contents to comma-separated string.

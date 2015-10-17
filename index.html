@@ -66,6 +66,7 @@
     <script src="javascript/dummyData.js"></script>
     <script src="javascript/Floorplan.js"></script>
 </body>
+        
 <script>
     // Only runs this JS once all resources have been downloaded over the network
     $(document).ready(function() {
@@ -79,10 +80,10 @@
             imageHeight: 833,
             imageURL: 'images/venuepla1.jpg'
         };
-        
+
         var availableBoothText = 'This booth is currently available. Please contact us to inquire about exhibitng your product here.';
         var bothFontSize = '12px';
-        
+
         // Populate arrayOfBoothData with 
         var arrayOfBoothData = [];
         for (var key in window.dummyData) {
@@ -92,5 +93,6 @@
         window.floorplan = new Floorplan(backgroundImageData, arrayOfBoothData, availableBoothText, bothFontSize);
     }); // end document.ready()
 </script>
+    
 
 </html>

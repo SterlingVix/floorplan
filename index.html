@@ -65,32 +65,20 @@
     <!-- Local Scripts -->
     <script src="javascript/dummyData.js"></script>
     <script src="javascript/Floorplan.js"></script>
+    <script src="javascript/getBoothData.js"></script>
 </body>
         
 <script>
     // Only runs this JS once all resources have been downloaded over the network
-    $(document).ready(function() {
-        /**
-         * Set the dimensions of the natural W & H
-         * of the background image,
-         * as well as the relative URL.
-         **/
-        var backgroundImageData = {
-            imageWidth: 1438,
-            imageHeight: 833,
-            imageURL: 'images/venuepla1.jpg'
-        };
-
+    $(document).ready(function() {        
+        // Set the URL / filename for this event's booth data.
+        var eventDataFilename = 'floorplantest.xml'
+        
+        // Default text and styles
         var availableBoothText = 'This booth is currently available. Please contact us to inquire about exhibitng your product here.';
         var bothFontSize = '12px';
-
-        // Populate arrayOfBoothData with 
-        var arrayOfBoothData = [];
-        for (var key in window.dummyData) {
-            arrayOfBoothData.push(window.dummyData[key]);
-        };
-
-        window.floorplan = new Floorplan(backgroundImageData, arrayOfBoothData, availableBoothText, bothFontSize);
+        
+        window.floorplan = new Floorplan(availableBoothText, bothFontSize);
     }); // end document.ready()
 </script>
     

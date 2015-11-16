@@ -98,7 +98,7 @@ body {
 }
 .company-name {
     font-size: inherit;
-    padding: 0px 2px;
+    padding: 0.5rem 1rem;
     margin: 0px;
     text-overflow: ellipsis;
     overflow: hidden;

@@ -1,22 +1,22 @@
-var Floorplan = function (backgroundImageData, arrayOfBoothData, availableBoothText, bothFontSize, optionalContainerMaxWidth, optionalContainerMaxHeight) {
+var Floorplan = function (availableBoothText, boothFontSize, optionalContainerMaxWidth, optionalContainerMaxHeight) {
     /**
      * Floorplan object class variables.
      **/
+    // TEMP for testing
+    window.my = this;
+
     this.appContainer = $('.app-container');
     this.containerMaxWidth = optionalContainerMaxWidth || '1300px';
     this.containerMaxHeight = optionalContainerMaxHeight || '700px';
     this.measurementUnits = 'px';
     this.pathToLogos = 'images/logos/';
     this.availableBoothText = availableBoothText;
-    this.bothFontSize = bothFontSize;
+    this.boothFontSize = boothFontSize;
     this.backgroundImageElement = $('#background-image');
     this.bodyReference = $('body'); // cache this to avoid frequent DOM parsing (which is expensive).
     this.zoomInElement = $('#zoom-in');
     this.zoomOutElement = $('#zoom-out');
-    this.backgroundImageElement.naturalWidth = backgroundImageData.imageWidth;
-    this.backgroundImageElement.naturalHeight = backgroundImageData.imageHeight;
-    this.imageBackgroundWidth = backgroundImageData.imageWidth;
-    this.imageBackgroundHeight = backgroundImageData.imageHeight;
+    
     this.backgroundImageElement.left = 0;
     this.backgroundImageElement.top = 0;
     this.backgroundImageScale = 1;
@@ -26,11 +26,18 @@ var Floorplan = function (backgroundImageData, arrayOfBoothData, availableBoothT
     this.boothElements = {};
     this.modals = {};
     
-    // Assign backgroundImage of app-container
-    this.setBackgroundImage(backgroundImageData, this.containerMaxWidth, this.containerMaxHeight, this.appContainer);
+    // this.URL = 'http://activeeventtechnology.com/floorplantest.xml';
+    this.URL = 'floorplantest.xml';
+    this.URL = '/floorplantest.xml';
+    this.URL = '../floorplantest.xml';
+    this.URL = '/../floorplantest.xml';
+    this.URL = './floorplantest.xml';
 
-    // Create booth elements and populate with data
-    this.createBoothElements(arrayOfBoothData);
+    // Get booth data from server - function is in getBoothData.js
+    this.getBoothData();
+    
+    // Set custom booth styles if set during instantiation.
+    this.setBoothStyles();
 
     // Render modal elements
     this.renderModalElements();
@@ -40,8 +47,7 @@ var Floorplan = function (backgroundImageData, arrayOfBoothData, availableBoothT
 
     // Register dragging events
     this.registerDragEvents();
-
-}; // end Floorplan(backgroundImageData, arrayOfBoothData)
+}; // end Floorplan()
 
 Floorplan.prototype.modalTemplate = {
     modalRoot: $('<div class="modal-dialog" role="document">'),
@@ -54,7 +60,21 @@ Floorplan.prototype.modalTemplate = {
     buttonClose: $('<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>')
 }; // end this.modalTemplate;
 
+
+
+
+
+
+
+
+
 Floorplan.prototype.setBackgroundImage = function (backgroundImageData, containerMaxWidth, containerMaxHeight, imageContainer, optionalImageWidth, optionalImageHeight) {
+    // 
+    this.backgroundImageElement.naturalWidth = this.backgroundImageData.imageWidth;
+    this.backgroundImageElement.naturalHeight = this.backgroundImageData.imageHeight;
+    this.imageBackgroundWidth = this.backgroundImageData.imageWidth;
+    this.imageBackgroundHeight = this.backgroundImageData.imageHeight;
+    
     // Get pixel value of 80% height of container window
     var containedImageWidth = (this.appContainer.width() * 0.8);
     var containedImageHeight = (this.appContainer.height() * 0.8);
@@ -105,130 +125,86 @@ Floorplan.prototype.positionBackgroundImage = function () {
  * Creates variables for booth data in Floorplan instance,
  * as well as the elements to insert into the DOM and
  * modal popup data.
- * 
- * @param {Object}  boothDataArray    Array of objects with booth data.
  *
  * See `dummyData.js` for an example of booth data.
  * A booth object has the following keys:
  * 
- *   company:                 (String)
+ *   coordinatesLeftX:        (Int)
+ *   coordinatesTopY:         (Int)
+ *   boothWidth:              (Int)
+ *   boothHeight:             (Int)
+ *   boothNumber:             (Int)
+ *   companyName:             (String)
  *   information:             (String)
  *   personell:               (Array of Strings)
- *   boothNumber:             (Int)
  *   logo:                    (String)
- *   coordinatesLeftX:        (Int)
- *     &  coordinatesRightX:  (Int)
- *     OR boothWidth:         (Int)
- *   coordinatesTopY:         (Int)
- *     &  coordinatesBottomY: (Int)
- *     OR boothHeight:        (Int)
+ *   website:                 (String)       // TODO
+ *   email:                   (String)       // TODO
  *   isAvailable:             (Bool)
  */
-Floorplan.prototype.createBoothElements = function (boothDataArray) {
-    // Set font size of booth text from user input in <style> tag
-    $('head').append($('<style>.booth { font-size: ' + this.bothFontSize + '; }</style>'));
+Floorplan.prototype.createBoothElements = function () {
     
-    // Check boothDataArray for 'right' or 'width'.
-    var useWidthHeightFlag = false;
-    if (!!boothDataArray[0].boothWidth) {
-        useWidthHeightFlag = true;
-    }
+    // Set font size of booth text from user input in <style> tag
+    $('head').append($('<style>.booth { font-size: ' + this.boothFontSize + '; }</style>'));
 
-    // Parse data from boothDataArray, storing in Floorplan instance, and create DOM element.
-    for (var i = 0; i < boothDataArray.length; i++) {
-        var thisBoothData = boothDataArray[i];
-        var boothElement = $('<div class="alert booth" data-company="' + thisBoothData.company +
-//            '" data-toggle="modal" data-target="#modal-' + thisBoothData.boothNumber + '"></div>'); // MODAL code
-//            '" data-toggle="tooltip" data-target="#modal-' + thisBoothData.boothNumber + '" title="' + thisBoothData.company + '"></div>'); // TOOLTIP code
-            '" data-toggle="modal" data-target="#modal-' + thisBoothData.boothNumber + '" title="' + thisBoothData.company + '" data-content="At this booth:' + (thisBoothData.personell.join(', ')).toString() + '"></div>'); // MODAL + POPOVER code
-        
+    // Parse data from this.boothDataArray, storing in Floorplan instance, and create DOM element.
+    for (var i = 0; i < this.boothDataArray.length; i++) {
+        var thisBoothData = this.boothDataArray[i];
+        var boothElement = $('<div class="alert booth" data-company="' + thisBoothData.companyName +
+            // '" data-toggle="modal" data-target="#modal-' + thisBoothData.boothNumber + '"></div>'); // MODAL code
+            // '" data-toggle="tooltip" data-target="#modal-' + thisBoothData.boothNumber + '" title="' + thisBoothData.companyName + '"></div>'); // TOOLTIP code
+            '" data-toggle="modal" data-target="#modal-' + thisBoothData.boothNumber + '" title="' + thisBoothData.companyName + '" data-content="At this booth:' + (thisBoothData.personell.join(', ')).toString() + '"></div>'); // MODAL + POPOVER code
+
         // Instantiate tooltip on this element
-//        boothElement.tooltip({container: 'body'});
-        boothElement.popover({container: 'body'});
+        // boothElement.tooltip({container: 'body'});
+        boothElement.popover({
+            container: 'body'
+        });
 
-        
-//        boothElement.on('mouseover', function(event) { $(event.target).popover('show'); }); // end on(mouseover)
-//        boothElement.on('mouseenter', function(event) { $(event.target).popover('show'); }); // end on(mouseover)
-//        
-//        boothElement.on('mouseout', function(event) { $(event.target).popover('hide'); }); // end on(mouseover)
-//        boothElement.on('mouseleave', function(event) { $(event.target).popover('hide'); }); // end on(mouseover)
-        
-        
-        
+
+        // boothElement.on('mouseover', function(event) { $(event.target).popover('show'); }); // end on(mouseover)
+        // boothElement.on('mouseenter', function(event) { $(event.target).popover('show'); }); // end on(mouseover)
+        // boothElement.on('mouseout', function(event) { $(event.target).popover('hide'); }); // end on(mouseover)
+        // boothElement.on('mouseleave', function(event) { $(event.target).popover('hide'); }); // end on(mouseover)
+
+
+
         // TODO: Try each of these combos and see which works.
         // Only works on root element, not on text, too. Can be solved with "pointer-events: none" on text elements?
-        boothElement.on('mouseover', function(event) { $(event.target).popover('show'); }); boothElement.on('mouseout', function(event) { $(event.target).popover('hide'); }); 
+        boothElement.on('mouseover', function (event) {
+            $(event.target).popover('show');
+        });
+        boothElement.on('mouseout', function (event) {
+            $(event.target).popover('hide');
+        });
 
         // boothElement.on('mouseover', function(event) { $(event.target).popover('show'); }); boothElement.on('mouseleave', function(event) { $(event.target).popover('hide'); }); 
 
         // boothElement.on('mouseenter', function(event) { $(event.target).popover('show'); }); boothElement.on('mouseout', function(event) { $(event.target).popover('hide'); }); 
 
         // boothElement.on('mouseenter', function(event) { $(event.target).popover('show'); }); boothElement.on('mouseleave', function(event) { $(event.target).popover('hide'); });  
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+
+
+
+
         // Add colors from Bootstrap's alert models
         if (thisBoothData.isAvailable) {
-            //            boothElement.addClass('alert-success');
+            // boothElement.addClass('alert-success');
             boothElement.addClass('alert-info');
         } else {
             boothElement.addClass('alert-warning');
-            //            boothElement.addClass('alert-danger');
+            // boothElement.addClass('alert-danger');
         }
 
         var boothNumberElement = $('<p class="booth-number" data-booth-number="' + thisBoothData.boothNumber + '">' + thisBoothData.boothNumber + '</p>');
-        var companyElement = $('<h4 class="company-name">' + thisBoothData.company + '</h4>');
+        var companyElement = $('<h4 class="company-name">' + thisBoothData.companyName + '</h4>');
 
         // Set unique CSS styles for this booth (primarily position)
-        var boothStyles = {
-            left: (thisBoothData.coordinatesLeftX + this.measurementUnits),
-            top: (thisBoothData.coordinatesTopY + this.measurementUnits)
-        };
-        if (useWidthHeightFlag) {
-            boothStyles.width = (thisBoothData.boothWidth + this.measurementUnits);
-            boothStyles.height = (thisBoothData.boothHeight + this.measurementUnits);
-        } else {
-            boothStyles.width = (thisBoothData.coordinatesRightX - thisBoothData.coordinatesLeftX) + this.measurementUnits;
-            boothStyles.height = (thisBoothData.coordinatesTopY - thisBoothData.coordinatesBottomY) + this.measurementUnits;
-        }
-
-        // Create CSS string for booth
         var boothCSSObject = {
-            'left': boothStyles.left,
-            'top': boothStyles.top,
-            'width': boothStyles.width,
-            'height': boothStyles.height
+            left: (thisBoothData.coordinatesLeftX + this.measurementUnits),
+            top: (thisBoothData.coordinatesTopY + this.measurementUnits),
+            width: (thisBoothData.boothWidth + this.measurementUnits),
+            height: (thisBoothData.boothHeight + this.measurementUnits)
         };
 
         // add CSS styles to booth instance
@@ -248,6 +224,165 @@ Floorplan.prototype.createBoothElements = function (boothDataArray) {
         this.boothElements[thisBoothData.boothNumber].append(companyElement);
     } // end for(boothDataArray)
 }; // end createBoothElements()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+ * Creates variables for booth data in Floorplan instance,
+ * as well as the elements to insert into the DOM and
+ * modal popup data.
+ *
+ * See `dummyData.js` for an example of booth data.
+ * A booth object has the following keys:
+ * 
+ *   coordinatesLeftX:        (Int)
+ *   coordinatesTopY:         (Int)
+ *   boothWidth:              (Int)
+ *   boothHeight:             (Int)
+ *   boothNumber:             (Int)
+ *   companyName:             (String)
+ *   information:             (String)
+ *   personell:               (Array of Strings)
+ *   logo:                    (String)
+ *   website:                 (String)       // TODO
+ *   email:                   (String)       // TODO
+ *   isAvailable:             (Bool)
+ */
+Floorplan.prototype.createBoothElement = function (thisBoothData) {
+    var boothElement = $('<div class="alert booth" data-company="' + thisBoothData.companyName + '" data-toggle="modal" data-target="#modal-' + thisBoothData.boothNumber + '" title="' + thisBoothData.companyName + '" data-content="At this booth: ' + thisBoothData.personell + '"></div>'); // MODAL + POPOVER code
+
+    debugger;
+    // Instantiate tooltip on this element
+    // boothElement.tooltip({container: 'body'});
+    boothElement.popover({
+        container: 'body'
+    });
+
+
+    // boothElement.on('mouseover', function(event) { $(event.target).popover('show'); }); // end on(mouseover)
+    // boothElement.on('mouseenter', function(event) { $(event.target).popover('show'); }); // end on(mouseover)
+    // boothElement.on('mouseout', function(event) { $(event.target).popover('hide'); }); // end on(mouseover)
+    // boothElement.on('mouseleave', function(event) { $(event.target).popover('hide'); }); // end on(mouseover)
+
+
+
+    // TODO: Try each of these combos and see which works.
+    // Only works on root element, not on text, too. Can be solved with "pointer-events: none" on text elements?
+    boothElement.on('mouseover', function (event) {
+        $(event.target).popover('show');
+    });
+    boothElement.on('mouseout', function (event) {
+        $(event.target).popover('hide');
+    });
+
+    // boothElement.on('mouseover', function(event) { $(event.target).popover('show'); }); boothElement.on('mouseleave', function(event) { $(event.target).popover('hide'); }); 
+
+    // boothElement.on('mouseenter', function(event) { $(event.target).popover('show'); }); boothElement.on('mouseout', function(event) { $(event.target).popover('hide'); }); 
+
+    // boothElement.on('mouseenter', function(event) { $(event.target).popover('show'); }); boothElement.on('mouseleave', function(event) { $(event.target).popover('hide'); });  
+
+
+
+
+    // Add colors from Bootstrap's alert models
+    if (thisBoothData.isAvailable) {
+        // boothElement.addClass('alert-success');
+        boothElement.addClass('alert-info');
+    } else {
+        boothElement.addClass('alert-warning');
+        // boothElement.addClass('alert-danger');
+    }
+
+    var boothNumberElement = $('<p class="booth-number" data-booth-number="' + thisBoothData.boothNumber + '">' + thisBoothData.boothNumber + '</p>');
+    var companyElement = $('<h4 class="company-name">' + thisBoothData.companyName + '</h4>');
+
+    // Set unique CSS styles for this booth (primarily position)
+    var boothCSSObject = {
+        left: (thisBoothData.coordinatesLeftX + this.measurementUnits),
+        top: (thisBoothData.coordinatesTopY + this.measurementUnits),
+        width: (thisBoothData.boothWidth + this.measurementUnits),
+        height: (thisBoothData.boothHeight + this.measurementUnits)
+    };
+
+    // add CSS styles to booth instance
+    boothElement.css(boothCSSObject);
+
+    // Add all boothData keys & values to the DOM Element Object
+    for (key in thisBoothData) {
+        boothElement[key] = thisBoothData[key];
+    }
+
+    // Hash this booth element to the 'this.boothElements' object with [[booth-number]] as the key.
+    this.boothElements[thisBoothData.boothNumber] = boothElement;
+
+    // Nest elements in one another.
+    this.backgroundImageElement.append(this.boothElements[thisBoothData.boothNumber]);
+    this.boothElements[thisBoothData.boothNumber].append(boothNumberElement);
+    this.boothElements[thisBoothData.boothNumber].append(companyElement);
+}; // end createBoothElement()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+ * Set font size of booth text from user input in <style> tag
+ **/
+Floorplan.prototype.setBoothStyles = function () {
+    $('head').append($('<style>.booth { font-size: ' + this.boothFontSize + '; }</style>'));
+}; // end setBoothStyles()
+
 
 Floorplan.prototype.registerZoomEvents = function () {
     this.zoomInElement.on('click', function (event) {
@@ -289,7 +424,7 @@ Floorplan.prototype.registerDragEvents = function () {
         window.floorplan.dragging = true;
     });
 
-//    this.backgroundImageElement[0].addEventListener('mouseup', function (event) {
+    //    this.backgroundImageElement[0].addEventListener('mouseup', function (event) {
     document.addEventListener('mouseup', function (event) {
         window.floorplan.dragging = false;
     });
@@ -298,7 +433,7 @@ Floorplan.prototype.registerDragEvents = function () {
     this.appContainer[0].addEventListener('mousemove', function (event) {
         // Only move is the mouse is being held down
         if (window.floorplan.dragging) {
-            
+
             // TODO: Try these both out for borwser compatability
             // if (!!event.movementX || !!event.movementY) {
             if (event.movementX !== undefined || event.movementY !== undefined) {
@@ -341,33 +476,33 @@ Floorplan.prototype.renderModalElements = function () {
 
 Floorplan.prototype.createModal = function (boothData) {
     // If defined, cast personell array contents to comma-separated string.
-    var personellString = ''; 
+    var personellString = '';
     if (!!boothData.personell && boothData.personell.length !== 0) {
-        personellString = '<span class="exhibitors">Exhibitors: </span>' + boothData.personell.join(', ');        
+        personellString = '<span class="exhibitors">Exhibitors: </span>' + boothData.personell.join(', ');
     }
-    
+
     // Create popup modal element
     var modal = $('<div class="modal fade" id="modal-' + boothData.boothNumber + '" tabindex="-1" role="dialog"></div>');
 
     // TODO: Update for "available" booths here!
-    
+
     // HTML Strings for specific modal elements
     var modalImageHTML = '';
     var modalTitleHTML = '<h4 class="modal-title booth-available" id="modal-label-' + boothData.boothNumber + '">Available to reserve (Booth ' + boothData.boothNumber + ')</h4>';
     var companyInformationHTML = '<p class="company-information available-booth-information">' + this.availableBoothText + '</p>';
     var favoriteButtonHTML = '';
-    
+
     // Update the placeholder strings if the booth is taken
     if (!boothData.isAvailable) {
         favoriteButtonHTML = '<button type="button" class="btn btn-primary btn-favorite">Favorite <span id="zoom-in" class="glyphicon glyphicon-heart glyphicon-favorite"></span></button>';
-//        favoriteButtonHTML = '<button type="button" class="btn btn-primary">Favorite <span id="zoom-in" class="glyphicon glyphicon-star-empty glyphicon-favorite"></span></button>';
-        
+        // favoriteButtonHTML = '<button type="button" class="btn btn-primary">Favorite <span id="zoom-in" class="glyphicon glyphicon-star-empty glyphicon-favorite"></span></button>';
+
         if (boothData.logo) {
-//            modalImageHTML = ' <div class="modal-image-container"><img class="company-logo" src="' + this.pathToLogos + boothData.logo + '" /></div>';
+            // modalImageHTML = ' <div class="modal-image-container"><img class="company-logo" src="' + this.pathToLogos + boothData.logo + '" /></div>';
             modalImageHTML = ' <div class="modal-image-container" style="background-image: url(' + this.pathToLogos + boothData.logo + ')"></div>';
         }
-        if (boothData.company) {
-            modalTitleHTML = '<h4 class="modal-title" id="modal-label-' + boothData.boothNumber + '">' + boothData.company + ' (Booth ' + boothData.boothNumber + ')</h4>'
+        if (boothData.companyName) {
+            modalTitleHTML = '<h4 class="modal-title" id="modal-label-' + boothData.boothNumber + '">' + boothData.companyName + ' (Booth ' + boothData.boothNumber + ')</h4>'
         }
         if (boothData.information) {
             companyInformationHTML = '<p class="company-information">' + boothData.information + '</p>';
@@ -375,23 +510,7 @@ Floorplan.prototype.createModal = function (boothData) {
     }
 
     // Long text string for innerHTML of modal element
-    var modalHTML = '<div class="modal-dialog" role="document">'
-    + '    <div class="modal-content">'
-    + '        <div class="modal-header">'
-    + '            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>'
-    +              modalTitleHTML
-    + '        </div>'
-    + '        <div class="modal-body">'
-    +              modalImageHTML
-    + '            <p class="company-personell">' + personellString + '</p>'
-    +              companyInformationHTML
-    + '        </div>'
-    + '        <div class="modal-footer">'
-    + '            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>'
-    +              favoriteButtonHTML
-    + '        </div>'
-    + '    </div>' 
-    + '</div>';
+    var modalHTML = '<div class="modal-dialog" role="document">' + '    <div class="modal-content">' + '        <div class="modal-header">' + '            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>' + modalTitleHTML + '        </div>' + '        <div class="modal-body">' + modalImageHTML + '            <p class="company-personell">' + personellString + '</p>' + companyInformationHTML + '        </div>' + '        <div class="modal-footer">' + '            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>' + favoriteButtonHTML + '        </div>' + '    </div>' + '</div>';
 
     // Assign innerHTML to modal element
     modal.html(modalHTML);
@@ -403,15 +522,15 @@ Floorplan.prototype.createModal = function (boothData) {
 
 
 Floorplan.prototype.createTooltip = function (boothData) {
-//    <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="Tooltip on top">Tooltip on top</button>
-    
+    //    <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="Tooltip on top">Tooltip on top</button>
+
     $(function () {
-  $('[data-toggle="tooltip"]').tooltip()
-})
-    
+        $('[data-toggle="tooltip"]').tooltip()
+    })
+
     $('#example').tooltip(options)
-    
-    
+
+
 }; // end createTooltip()
 /**
 Floorplan.prototype.createModal = function (boothData) {    
@@ -439,8 +558,8 @@ Floorplan.prototype.createModal = function (boothData) {
         if (boothData.logo) {
             modalImage = $('<div class="modal-image-container" style="background-image: url(' + this.pathToLogos + boothData.logo + ')"></div>');
         }
-        if (boothData.company) {
-            modalTitle = $(('<h4 class="modal-title" id="modal-label-' + boothData.boothNumber + '">' + boothData.company + ' (Booth ' + boothData.boothNumber + ')</h4>'));
+        if (boothData.companyName) {
+            modalTitle = $(('<h4 class="modal-title" id="modal-label-' + boothData.boothNumber + '">' + boothData.companyName + ' (Booth ' + boothData.boothNumber + ')</h4>'));
         }
         if (boothData.information) {
             modalCompanyInformation = $('<p class="company-information">' + boothData.information + '</p>');
@@ -474,11 +593,11 @@ Floorplan.prototype.createModal = function (boothData) {
     //    var modalTitleHTML = '<h4 class="modal-title booth-available" id="modal-label-' + boothData.boothNumber + '">Available to reserve (Booth ' + boothData.boothNumber + ')</h4>';
     //    var companyInformationHTML = '<p class="company-information available-booth-information">' + this.availableBoothText + '</p>';
     //    var favoriteButtonHTML = '';
-    //        favoriteButtonHTML = '<button type="button" class="btn btn-primary btn-favorite">Favorite <span id="zoom-in" class="glyphicon glyphicon-heart glyphicon-favorite"></span></button>';
-    //        favoriteButtonHTML = '<button type="button" class="btn btn-primary">Favorite <span id="zoom-in" class="glyphicon glyphicon-star-empty glyphicon-favorite"></span></button>';
-    //            modalImageHTML = ' <div class="modal-image-container"><img class="company-logo" src="' + this.pathToLogos + boothData.logo + '" /></div>';
-    //            modalTitleHTML = '<h4 class="modal-title" id="modal-label-' + boothData.boothNumber + '">' + boothData.company + ' (Booth ' + boothData.boothNumber + ')</h4>'
-    //            companyInformationHTML = '<p class="company-information">' + boothData.information + '</p>';
+    // favoriteButtonHTML = '<button type="button" class="btn btn-primary btn-favorite">Favorite <span id="zoom-in" class="glyphicon glyphicon-heart glyphicon-favorite"></span></button>';
+    // favoriteButtonHTML = '<button type="button" class="btn btn-primary">Favorite <span id="zoom-in" class="glyphicon glyphicon-star-empty glyphicon-favorite"></span></button>';
+    // modalImageHTML = ' <div class="modal-image-container"><img class="company-logo" src="' + this.pathToLogos + boothData.logo + '" /></div>';
+    // modalTitleHTML = '<h4 class="modal-title" id="modal-label-' + boothData.boothNumber + '">' + boothData.companyName + ' (Booth ' + boothData.boothNumber + ')</h4>'
+    // companyInformationHTML = '<p class="company-information">' + boothData.information + '</p>';
     
     // Long text string for innerHTML of modal element
     //    var modalHTML = '<div class="modal-dialog" role="document">'

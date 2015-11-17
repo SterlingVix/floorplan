@@ -169,14 +169,17 @@ body {
  **/
 @media (min-width: 768px) {
     .modal-dialog {
-        min-width: 75%;
+        min-width: 66%;
         max-height: calc(98% - 60px);
+        margin: 4em auto;
     }
 }
 
 .modal-dialog .modal-content {
+/*
     height: calc(96% - 60px);
     min-height: calc(80% - 60px);
+*/
 }
 
 .modal-dialog .modal-content .modal-header {
@@ -188,6 +191,19 @@ body {
 .modal-dialog .modal-content .modal-header h4.modal-title {
     font-size: 2em;
 /*    z-index: 10;*/
+}
+
+/* Set default body size. Assume the following:
+ *   modal padding = 4em (2em + 2em)
+ *   modal header = 3em (71px to 90px)
+ *   modalFooter = 2em (60px)
+ **/
+.modal-dialog .modal-content .modal-body {
+    height: calc(75% - 4em - 3em - 2em);
+    min-height: calc(66% - 4em - 3em - 2em);
+    max-height: calc(85% - 4em - 3em - 2em);
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 /*.modal-dialog .modal-content .modal-header div.modal-image-container {*/
@@ -216,8 +232,6 @@ body {
     margin: 0 auto;
 */
 }
-
-.modal-dialog .modal-content .modal-body {}
 
 .modal-dialog .modal-content .modal-body p.company-personell {
     width: 50%;

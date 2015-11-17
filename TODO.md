@@ -1,12 +1,5 @@
 # TODO:
 
-
-
-Modal popup: at this booth: (null) all
-
-
-
-
 * View: Floorplan
 * View: booth detail
 * View: summary / event?

@@ -81,6 +81,10 @@ body {
     cursor: pointer;
 }
 
+.booth * {
+    pointer-events: none;
+}
+
 /*
 .booth[data-available="true"] {
     background-color: greenyellow;
@@ -89,6 +93,10 @@ body {
     background-color: palevioletred;
 }
 */
+
+.popover > h3.popover-title[] {
+    color: green;
+}
 
 .booth-number {
     font-size: inherit;
@@ -148,13 +156,28 @@ body {
     line-height: 1.4;
 }
 
+.no-text-selection {
+    -webkit-user-select: none; /* webkit (safari, chrome) browsers */
+    -moz-user-select: none; /* mozilla browsers */
+    -khtml-user-select: none; /* webkit (konqueror) browsers */
+    -ms-user-select: none; /* IE10+ */
+}
+
 
 /**
  * Modal Styling in addition to Bootstrap's styling
  **/
-.modal-dialog {}
+@media (min-width: 768px) {
+    .modal-dialog {
+        min-width: 75%;
+        max-height: calc(98% - 60px);
+    }
+}
 
-.modal-dialog .modal-content {}
+.modal-dialog .modal-content {
+    height: calc(96% - 60px);
+    min-height: calc(80% - 60px);
+}
 
 .modal-dialog .modal-content .modal-header {
 /*    height: 6em;*/

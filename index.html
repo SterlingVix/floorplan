@@ -44,7 +44,7 @@
         <!--     <div class="container"> -->
         <div class="app-container">
             <div id="background-image" class="invisible"></div>
-            <div class="zoom-controls" data-color-palette="color3">
+            <div class="zoom-controls no-text-selection" data-color-palette="color3">
                 <span id="zoom-in" class="glyphicon glyphicon-plus"></span>
                 <span id="zoom-out" class="glyphicon glyphicon-minus"></span>
             </div>
@@ -63,22 +63,26 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <script src="http://getbootstrap.com/assets/js/ie10-viewport-bug-workaround.js"></script>
     <!-- Local Scripts -->
-    <script src="javascript/dummyData.js"></script>
     <script src="javascript/Floorplan.js"></script>
-    <script src="javascript/getBoothData.js"></script>
+    <script src="javascript/FloorplanEvents.js"></script>
+    <script src="javascript/FloorplanAJAX.js"></script>
+    <script src="javascript/FloorplanModal.js"></script>
 </body>
         
 <script>
     // Only runs this JS once all resources have been downloaded over the network
     $(document).ready(function() {        
-        // Set the URL / filename for this event's booth data.
-        var eventDataFilename = 'floorplantest.xml'
+        var floorplanAppOptions = {
+            // Set the URL / filename for this event's booth data.
+            eventDataFilename: 'floorplantest.xml',
+            // Default text and styles
+            availableBoothText: 'This booth is currently available. Please contact us to inquire about exhibitng your product here.',
+            boothFontSize: '12px',
+            // Set zoom senzitivity (higher === faster zoom)
+            backgroundImageZoomAmount: 1.1
+        }
         
-        // Default text and styles
-        var availableBoothText = 'This booth is currently available. Please contact us to inquire about exhibitng your product here.';
-        var bothFontSize = '12px';
-        
-        window.floorplan = new Floorplan(availableBoothText, bothFontSize);
+        window.floorplan = new Floorplan(floorplanAppOptions);
     }); // end document.ready()
 </script>
     

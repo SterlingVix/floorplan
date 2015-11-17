@@ -18,38 +18,38 @@ Floorplan.prototype.getBoothData = function (URL) {
              * For now, set naturalW and naturalH explicitly.
              **/
             this.backgroundImageXMLData = this.floorPlanXMLDocument.querySelector('graphic');
-        
+
             this.backgroundImageData = {
                 imageWidth: Number.parseInt(this.backgroundImageXMLData.getAttribute('naturalw')),
                 imageHeight: Number.parseInt(this.backgroundImageXMLData.getAttribute('naturalh')),
                 imageURL: this.backgroundImageXMLData.getAttribute('imagename')
             };
-        
+
             // Assign backgroundImage of app-container
             this.setBackgroundImage(this.backgroundImageData, this.containerMaxWidth, this.containerMaxHeight, this.appContainer);
 
             // Parse booth data
             this.boothXMLElements = this.floorPlanXMLDocument.querySelectorAll('booth');
-        
+
             for (var i = 0; i < this.boothXMLElements.length; i++) {
                 var thisBooth = {
                     id: this.boothXMLElements[i].getAttribute('idx'), // should probably drop, since we need to enforce uniqueness
-                    coordinatesLeftX: this.boothXMLElements[i].getAttribute('x'),
-                    coordinatesTopY: this.boothXMLElements[i].getAttribute('y'),
-                    boothWidth: this.boothXMLElements[i].getAttribute('w'),
-                    boothHeight: this.boothXMLElements[i].getAttribute('h'),
-                    boothNumber: this.boothXMLElements[i].getAttribute('number'),
+                    coordinatesLeftX: Number.parseInt(this.boothXMLElements[i].getAttribute('x')),
+                    coordinatesTopY: Number.parseInt(this.boothXMLElements[i].getAttribute('y')),
+                    boothWidth: Number.parseInt(this.boothXMLElements[i].getAttribute('w')),
+                    boothHeight: Number.parseInt(this.boothXMLElements[i].getAttribute('h')),
+                    boothNumber: Number.parseInt(this.boothXMLElements[i].getAttribute('number')),
                     companyName: this.boothXMLElements[i].getAttribute('display'), // would prefer we rename this tag to something like 'companyname'
-                    information: this.boothXMLElements[i].getAttribute('description'), // should lowercase 'display'
+                    information: this.boothXMLElements[i].getAttribute('description'), // should lowercase 'description'
                     personell: this.boothXMLElements[i].getAttribute('header'), // would prefer we rename to something like 'personell'.
                     logo: this.boothXMLElements[i].getAttribute('logo'),
                     website: this.boothXMLElements[i].getAttribute('website'),
-                    email: this.boothXMLElements[i].getAttribute('email'),
+                    email: this.boothXMLElements[i].getAttribute('email')
                 };
-                
+
                 // Based on company name, determine if this booth is available or not.
                 if (thisBooth.companyName.toLowerCase() === 'available') {
-                    thisBooth.isAvailable = false;
+                    thisBooth.isAvailable = true;
                 } else {
                     thisBooth.isAvailable = false;
                 }
@@ -60,29 +60,28 @@ Floorplan.prototype.getBoothData = function (URL) {
                 }
                 if (thisBooth.personell === null) {
                     thisBooth.personell = this.boothXMLElements[i].getAttribute('Header');
-                }
+
+                    // Check again, if unassigned, replace 'null' with prompt for 'you?'
+                    if (thisBooth.personell === null && thisBooth.companyName.toLowerCase() === 'available') {
+                        thisBooth.personell = 'You?';
+                    }
+                } // end if (thisBooth.personell === null)
 
                 this.createBoothElement(thisBooth);
-
             } // end for (each boothXMLElement)
         }).bind(this))
-        .done(function (floorPlanXML, status, jqxhr) {
-            console.log("in Done");
-            console.log(floorPlanXML);
-            console.log(status);
-            console.log(jqxhr);
-        })
-        .fail(function (parm1) {
-            console.log("error");
-            console.log(parm1);
+        .done((function (floorPlanXML, status, jqxhr) {
+            // Register all events
+            this.registerFloorplanEvents();
+
+            // Render modal elements
+            this.renderModalElements();
+        }).bind(this))
+        .fail((function (error) {
+            console.log("Error in $.get");
+            console.log(error);
             debugger;
-        })
-        .always(function (floorPlanXML, status, jqxhr) {
-            //            console.log("in Finished");
-            //            console.log(floorPlanXML);
-            //            console.log(status);
-            //            console.log(jqxhr);
-        });
+        }).bind(this));
 }; // end getBoothData(URL)
 
 
@@ -99,3 +98,25 @@ Floorplan.prototype.getBoothData = function (URL) {
 // for (var key in window.dummyData) {
 //     arrayOfBoothData.push(window.dummyData[key]);
 // };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

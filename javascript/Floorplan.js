@@ -1,14 +1,21 @@
 var Floorplan = function (floorplanAppOptions) {
     /**
-     * Floorplan object class variables.
+     * Floorplan object class variables and container elements.
      **/
-    // TEMP for testing
-    window.my = this;
-
     this.appContainer = $('.app-container');
+    this.aboutContainer = $('#about-page');
+    this.contactContainer = $('#contact-page');
     this.containerMaxWidth = floorplanAppOptions.optionalContainerMaxWidth || '1300px';
     this.containerMaxHeight = floorplanAppOptions.optionalContainerMaxHeight || '700px';
     this.measurementUnits = 'px';
+    this.eventName = '';
+    /**
+     * Nav bar elements
+     **/
+    this.navbarBrandButton = $('.navbar-brand');
+    this.navbarHomeButton = $('#navbar-button-home');
+    this.navbarAboutButton = $('#navbar-button-about');
+    this.navbarContactButton = $('#navbar-button-contact');
     
     // NOTE: Update this path depending on whether or not the relative path is included in the XML file.
 //    this.pathToLogos = 'images/logos';
@@ -33,8 +40,8 @@ var Floorplan = function (floorplanAppOptions) {
     // this.URL = 'http://activeeventtechnology.com/floorplantest.xml';
     this.URL = './floorplantest.xml';
 
-    // Set custom booth styles if set during instantiation.
-    this.setBoothStyles();
+    // Set custom page styles if set during instantiation.
+    this.setPageStyles();
     
     // Create 'available booth' content
     this.createAvailableBoothContent();
@@ -47,9 +54,9 @@ var Floorplan = function (floorplanAppOptions) {
 /**
  * Set font size of booth text from user input in <style> tag
  **/
-Floorplan.prototype.setBoothStyles = function () {
+Floorplan.prototype.setPageStyles = function () {
     $('head').append($('<style>.booth { font-size: ' + this.boothFontSize + '; }</style>'));
-}; // end setBoothStyles()
+}; // end setPageStyles()
 
 
 /**

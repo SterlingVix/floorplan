@@ -1,5 +1,6 @@
 /**
  * Floorplan app events:
+ *   registerNavButtons
  *   registerZoomEvents
  *     zoomIn
  *     zoomOut
@@ -7,6 +8,9 @@
  *   registerTooltipAndPopoverEvents
  **/
 Floorplan.prototype.registerFloorplanEvents = function () {
+    // Register events on the nav bar buttons
+    this.registerNavButtons();
+    
     // Register events on the zoom buttons
     this.registerZoomEvents();
 
@@ -14,6 +18,56 @@ Floorplan.prototype.registerFloorplanEvents = function () {
     this.registerDragEvents();
 }; // end registerFloorplanEvents()
 
+
+/**
+ * Handle nav bar buttons:
+ *   When the main (brand) button is clicked, defer to
+ *   the 'Home' button function.
+ **/
+Floorplan.prototype.registerNavButtons = function () {
+    // Add event listeners
+    this.navbarHomeButton.on('click', (function(event) {
+        this.updateActiveNavbarButton(event.delegateTarget);
+        this.appContainer.removeClass('hidden');
+    }).bind(this)); // and addEventListener(click navbar 'home' button)
+    
+    this.navbarAboutButton.on('click', (function(event) {
+        this.updateActiveNavbarButton(event.delegateTarget);
+        this.aboutContainer.removeClass('hidden');
+    }).bind(this)); // and addEventListener(click navbar 'about' button)
+    
+    this.navbarContactButton.on('click', (function(event) {
+        this.updateActiveNavbarButton(event.delegateTarget);
+        this.contactContainer.removeClass('hidden');
+    }).bind(this)); // and addEventListener(click navbar 'contact' button)
+    
+    // Defer the main button to the 'Home' button function
+    this.navbarBrandButton.on('click', (function(event) {
+        this.updateActiveNavbarButton(this.navbarHomeButton);
+        this.appContainer.removeClass('hidden');
+    }).bind(this)); // and addEventListener(click navbar main brand button)
+    
+}; // end registerNavButtons
+
+
+/**
+ * Update values on all navbar buttons.
+ **/
+Floorplan.prototype.updateActiveNavbarButton = function (clickedButton) {
+    // Remove the class 'active' from all buttons
+    this.navbarBrandButton.removeClass('active');
+    this.navbarHomeButton.removeClass('active');
+    this.navbarAboutButton.removeClass('active');
+    this.navbarContactButton.removeClass('active');
+    
+    // Add the class 'active' to the selected button
+    $(clickedButton).addClass('active');
+    
+    // Hide all pages and let the calling function remove the 'hidden' tag
+    this.appContainer.addClass('hidden');
+    this.aboutContainer.addClass('hidden');
+    this.contactContainer.addClass('hidden');
+}; // end updateActiveNavbarButton
 
 /**
  * Zoom events bound to '+' and '-' buttons and mouse wheel scrolling.
@@ -113,8 +167,6 @@ Floorplan.prototype.registerTooltipAndPopoverEvents = function (boothElement) {
  * Register function of "favorite" button in modal
  **/
 Floorplan.prototype.registerFavoriteButton = function(favoriteButton) {
-    console.log(favoriteButton);
-    
     favoriteButton.on('click', (function(event) {
         console.log('clicked favorite button at', event.delegateTarget);
     }).bind(this)); // end (cick favorite button)

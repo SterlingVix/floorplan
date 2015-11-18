@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <floorplan version="100">
-  <page backcolor="white" width="850" height="500" >
+  <page backcolor="white" eventname="Test Event" width="850" height="500" >
     <fontdesc index="1" name="Arial" size="8.25" style="Bold"  />
     <fontdesc index="2" name="Times New Roman" size="8.25" style="Bold"  />
     <fontdesc index="3" name="Times New Roman" size="24" style="Bold"  />

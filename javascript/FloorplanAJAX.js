@@ -12,6 +12,11 @@ Floorplan.prototype.getBoothData = function (URL) {
     $.get(URL, (function (floorPlanXML, status, jqxhr) {
             this.floorPlanXMLDocument = floorPlanXML.documentElement;
 
+            // Cache name of event from XML <floorplan> "eventname" attribute.
+            var pageXMLTag = this.floorPlanXMLDocument.querySelector('page');
+            this.eventName = pageXMLTag.getAttribute('eventname');
+            this.navbarBrandButton.text(this.eventName);
+ 
             /**
              * Set the dimensions of the natural W & H of the
              * background image, as well as the relative URL.

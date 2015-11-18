@@ -4,18 +4,21 @@ html {
     box-sizing: border-box;
     overflow-y: hidden;
 }
+
 *,
 *:before,
 *:after {
     box-sizing: inherit;
     overflow-y: inherit;
 }
+
 body {
     width: 100%;
     height: 100%;
     font-family: 'Arial', sans-serif;
     padding-top: 0px;
 }
+
 
 /*50 + 20*/
 
@@ -25,6 +28,7 @@ body {
     top: 0px !important;
     margin-bottom: 0px;
 }
+
 .app-container {
     position: relative;
     width: calc(100% - 40px);
@@ -36,6 +40,7 @@ body {
     margin: 20px auto;
     text-align: center;
 }
+
 #background-image {
     background-repeat: no-repeat;
     background-position: center;
@@ -52,11 +57,10 @@ body {
     -o-transition: transform 150ms ease-out, opacity 222ms ease-in 150ms;
     transition: transform 150ms ease-out, opacity 222ms ease-in 150ms;
 }
+
 #background-image.invisible {
     opacity: 0;
 }
-
-/*30 + 30 + 20*/
 
 .footer {
     display: block;
@@ -68,6 +72,7 @@ body {
     bottom: 0;
     margin-top: 0px;
 }
+
 .booth {
     border: 1px solid black;
     border-radius: 2px;
@@ -85,6 +90,7 @@ body {
     pointer-events: none;
 }
 
+
 /*
 .booth[data-available="true"] {
     background-color: greenyellow;
@@ -94,9 +100,11 @@ body {
 }
 */
 
+/*
 .popover > h3.popover-title[] {
     color: green;
 }
+*/
 
 .booth-number {
     font-size: inherit;
@@ -104,6 +112,7 @@ body {
     padding: 0px;
     margin: 0px;
 }
+
 .company-name {
     font-size: inherit;
     padding: 0.5rem 1rem;
@@ -111,8 +120,11 @@ body {
     text-overflow: ellipsis;
     overflow: hidden;
 }
+
 .company-logo {}
+
 .company-information {}
+
 .body-container {
     width: 100%;
     max-width: 100%;
@@ -124,6 +136,7 @@ body {
     padding: 0px!important;
     top: 0!important;
 }
+
 .zoom-controls {
     z-index: 100;
     position: absolute;
@@ -135,6 +148,7 @@ body {
     text-align: center;
     vertical-align: middle;
 }
+
 .zoom-controls span {
     display: block;
     width: 100%;
@@ -147,26 +161,41 @@ body {
     border-style: outset;
     cursor: pointer;
 }
+
 .zoom-controls span:active {
     border-style: inset;
     border-width: 2px 2px;
 }
+
 .zoom-controls span:nth-child(2) {
     /*    border-top-width: 0px;*/
     line-height: 1.4;
 }
 
 .no-text-selection {
-    -webkit-user-select: none; /* webkit (safari, chrome) browsers */
-    -moz-user-select: none; /* mozilla browsers */
-    -khtml-user-select: none; /* webkit (konqueror) browsers */
-    -ms-user-select: none; /* IE10+ */
+    /* webkit (safari, chrome) browsers */
+    -webkit-user-select: none;
+    /* mozilla browsers */
+    -moz-user-select: none;
+    /* webkit (konqueror) browsers */
+    -khtml-user-select: none;
+    /* IE10+ */
+    -ms-user-select: none;
 }
 
+a.navbar-brand {
+    
+}
+
+a.navbar-brand:hover {
+    color: red!important;
+/*    background-color: red!important;*/
+}
 
 /**
  * Modal Styling in addition to Bootstrap's styling
  **/
+
 @media (min-width: 768px) {
     .modal-dialog {
         min-width: 66%;
@@ -176,28 +205,31 @@ body {
 }
 
 .modal-dialog .modal-content {
-/*
+    /*
     height: calc(96% - 60px);
     min-height: calc(80% - 60px);
 */
 }
 
 .modal-dialog .modal-content .modal-header {
-/*    height: 6em;*/
+    /*    height: 6em;*/
 }
 
 .modal-dialog .modal-content .modal-header button.close {}
 
 .modal-dialog .modal-content .modal-header h4.modal-title {
     font-size: 2em;
-/*    z-index: 10;*/
+    /*    z-index: 10;*/
 }
 
-/* Set default body size. Assume the following:
+
+/**
+ * Set default body size. Assume the following:
  *   modal padding = 4em (2em + 2em)
  *   modal header = 3em (71px to 90px)
  *   modalFooter = 2em (60px)
  **/
+
 .modal-dialog .modal-content .modal-body {
     height: calc(75% - 4em - 3em - 2em);
     min-height: calc(66% - 4em - 3em - 2em);
@@ -206,7 +238,6 @@ body {
     overflow-y: auto;
 }
 
-/*.modal-dialog .modal-content .modal-header div.modal-image-container {*/
 .modal-dialog .modal-content .modal-body div.modal-image-container {
     position: relative;
     float: right;
@@ -224,9 +255,8 @@ body {
     z-index: 1;
 }
 
-/*.modal-dialog .modal-content .modal-header div.modal-image-container image.company-logo {*/
 .modal-dialog .modal-content .modal-body div.modal-image-container image.company-logo {
-/*
+    /*
     height: auto;
     width: 100%;
     margin: 0 auto;
@@ -249,5 +279,4 @@ body {
 
 .tooltip.top {
     transform: unset!important;
-    
 }

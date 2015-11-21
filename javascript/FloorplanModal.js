@@ -52,8 +52,43 @@ Floorplan.prototype.createModal = function (boothData) {
         }
     }
 
-    // Long text string for innerHTML of modal element
-    var modalHTML = '<div class="modal-dialog" role="document">' + '    <div class="modal-content">' + '        <div class="modal-header">' + '            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>' + modalTitleHTML + '        </div>' + '        <div class="modal-body">' + modalImageHTML + '            <p class="company-personell">' + personellString + '</p>' + companyInformationHTML + '        </div>' + '        <div class="modal-footer">' + '            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>' + favoriteButtonHTML + '        </div>' + '    </div>' + '</div>';
+    // Long text strings for innerHTML of modal element
+    var modalHeaderHTML = '<div class="modal-header">'
+    + '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>'
+    + modalTitleHTML
+    + '</div>';
+    
+    /**
+     * Old code:
+     *
+     *   var modalBodyHTML = '<div class="modal-body">'
+     *   + modalImageHTML
+     *   + '<p class="company-personell">'
+     *   + personellString
+     *   + '</p>'
+     *   + companyInformationHTML
+     *   + '</div>';
+     **/
+    var modalBodyHTML = '<div class="modal-body">'
+    + '<iframe id="booth-iframe-'
+    + boothData.boothNumber
+    + '" class="booth-iframe" href="'
+    + boothData.iframeReference
+    + '"></iframe>'
+    + '</div>';
+    
+    var modalFooterHTML = '<div class="modal-footer">'
+    + '<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>'
+    + favoriteButtonHTML
+    + '</div>';
+    
+    var modalHTML = '<div class="modal-dialog" role="document">'
+    + '    <div class="modal-content">'
+    + modalHeaderHTML
+    + modalBodyHTML
+    + modalFooterHTML
+    + '    </div>'
+    + '</div>';
 
     // Assign innerHTML to modal element
     modal.html(modalHTML);

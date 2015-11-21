@@ -83,14 +83,16 @@
     // Only runs this JS once all resources have been downloaded over the network
     $(document).ready(function () {
         var floorplanAppOptions = {
-            // Set the URL / filename for this event's booth data.
-            eventDataFilename: 'floorplantest.xml',
+            // Set the URL / filename for this event's booth data
+            eventDataFilename: 'AirAndSpaceFloorPlan.xml',
             // Default available booth text. Text 'contact us' will be hyperlinked
             availableBoothText: 'This booth is currently available. Please contact us to inquire about exhibitng your product here.',
             // Default text size style
-            boothFontSize: '12px',
+            boothFontSize: '6px',
+            // Initial map zoom level, where 1 is the natural size (100%)
+            initialZoomLevel: 2.5,
             // Set zoom senzitivity (higher === faster zoom)
-            backgroundImageZoomAmount: 1.1
+            backgroundImageZoomAmount: 1.2
         }
 
         window.floorplan = new Floorplan(floorplanAppOptions);

@@ -6,10 +6,8 @@
 /**
  * Get and parse XML booth data
  **/
-Floorplan.prototype.getBoothData = function (URL) {
-    var URL = URL || this.URL;
-
-    $.get(URL, (function (floorPlanXML, status, jqxhr) {
+Floorplan.prototype.getBoothData = function () {
+    $.get(this.eventDataFilename, (function (floorPlanXML, status, jqxhr) {
             this.floorPlanXMLDocument = floorPlanXML.documentElement;
 
             // Cache name of event from XML <floorplan> "eventname" attribute.
@@ -37,41 +35,58 @@ Floorplan.prototype.getBoothData = function (URL) {
             this.boothXMLElements = this.floorPlanXMLDocument.querySelectorAll('booth');
 
             for (var i = 0; i < this.boothXMLElements.length; i++) {
+                /**
+                 * Attribute key for thisBooth from XML:
+                 * 
+                 *   boothHeight:       h
+                 *   boothNumber:       number
+                 *   boothWidth:        w
+                 *   coordinatesLeftX:  x
+                 *   coordinatesTopY:   y
+                 *   colorBackground:   bc
+                 *   colorForeground:   fc
+                 *   email:             email      // currently null
+                 *   id:                'booth-' + number
+                 *   iframeReference:   iframe + '?id=' + number
+                 *   information:       desc
+                 *   logo:              logo       // currently null
+                 *   organizationDesc:  org
+                 *   personell:         header     // currently null
+                 *   tooltip:           tooltip
+                 *   website:           website    // currently null
+                 **/
+                var thisBoothNumber = Number.parseInt(this.boothXMLElements[i].getAttribute('number')); // cache booth number since we use it a few times.
                 var thisBooth = {
-                    id: this.boothXMLElements[i].getAttribute('idx'), // should probably drop, since we need to enforce uniqueness
+                    boothHeight: Number.parseInt(this.boothXMLElements[i].getAttribute('h')),
+                    boothNumber: thisBoothNumber,
+                    boothWidth: Number.parseInt(this.boothXMLElements[i].getAttribute('w')),
                     coordinatesLeftX: Number.parseInt(this.boothXMLElements[i].getAttribute('x')),
                     coordinatesTopY: Number.parseInt(this.boothXMLElements[i].getAttribute('y')),
-                    boothWidth: Number.parseInt(this.boothXMLElements[i].getAttribute('w')),
-                    boothHeight: Number.parseInt(this.boothXMLElements[i].getAttribute('h')),
-                    boothNumber: Number.parseInt(this.boothXMLElements[i].getAttribute('number')),
-                    companyName: this.boothXMLElements[i].getAttribute('display'), // would prefer we rename this tag to something like 'companyname'
-                    information: this.boothXMLElements[i].getAttribute('description'), // should lowercase 'description'
-                    personell: this.boothXMLElements[i].getAttribute('header'), // would prefer we rename to something like 'personell'.
-                    logo: this.boothXMLElements[i].getAttribute('logo'),
-                    website: this.boothXMLElements[i].getAttribute('website'),
-                    email: this.boothXMLElements[i].getAttribute('email')
+                    colorBackground: this.boothXMLElements[i].getAttribute('bc'),
+                    colorForeground: this.boothXMLElements[i].getAttribute('fc'),
+                    email: this.boothXMLElements[i].getAttribute('email'), // currently null
+                    id: ('booth-' + thisBoothNumber),
+                    iframeReference: ((this.boothXMLElements[i].getAttribute('iframe')) + '?id=' + thisBoothNumber),
+                    information: this.boothXMLElements[i].getAttribute('desc'),
+                    logo: this.boothXMLElements[i].getAttribute('logo'), // currently null
+                    organizationDesc: this.boothXMLElements[i].getAttribute('org'),
+                    personell: this.boothXMLElements[i].getAttribute('header'), // currently null
+                    tooltip: this.boothXMLElements[i].getAttribute('tooltip'),
+                    website: this.boothXMLElements[i].getAttribute('website'), // currently null
                 };
-
+                
                 // Based on company name, determine if this booth is available or not.
-                if (thisBooth.companyName.toLowerCase() === 'available') {
+                if (thisBooth.organizationDesc.toLowerCase() === 'available') {
                     thisBooth.isAvailable = true;
                 } else {
                     thisBooth.isAvailable = false;
                 }
 
-                // TEMPORARY - backup parsing of data from Alan's XML format
-                if (thisBooth.information === null) {
-                    thisBooth.information = this.boothXMLElements[i].getAttribute('Description');
+                thisBooth.information = this.boothXMLElements[i].getAttribute('desc');
+                if (thisBooth.personell === null && thisBooth.organizationDesc.toLowerCase() === 'available') {
+                    thisBooth.personell = 'You?';
                 }
-                if (thisBooth.personell === null) {
-                    thisBooth.personell = this.boothXMLElements[i].getAttribute('Header');
-
-                    // Check again, if unassigned, replace 'null' with prompt for 'you?'
-                    if (thisBooth.personell === null && thisBooth.companyName.toLowerCase() === 'available') {
-                        thisBooth.personell = 'You?';
-                    }
-                } // end if (thisBooth.personell === null)
-
+                
                 this.createBoothElement(thisBooth);
             } // end for (each boothXMLElement)
         }).bind(this))

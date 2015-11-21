@@ -117,11 +117,30 @@ body {
     display: block;
     font-size: inherit;
     cursor: pointer;
+    overflow-x: hidden;
+    overflow-y: hidden;
 }
 
 .booth * {
+    font-size: inherit;
     pointer-events: none;
+    text-overflow: clip;
+    color: #dddddd;
 }
+
+.booth > p.booth-number {
+    text-align: center;
+    padding: 0.25rem 0rem 0rem 0rem;
+    margin: 0px auto;
+}
+
+.booth > h4.company-name {
+    padding: 0.25rem;
+    margin: 0px auto;
+/*    text-overflow: ellipsis;*/
+    overflow: hidden;
+}
+
 
 
 /*
@@ -138,22 +157,6 @@ body {
     color: green;
 }
 */
-
-.booth-number {
-    font-size: inherit;
-    text-align: center;
-    padding: 0px;
-    margin: 0px;
-}
-
-.company-name {
-    font-size: inherit;
-    padding: 0.5rem 1rem;
-    margin: 0px;
-    text-overflow: ellipsis;
-    overflow: hidden;
-}
-
 .company-logo {}
 
 .company-information {}
@@ -317,6 +320,12 @@ a.navbar-brand:focus {
 .modal-dialog .modal-content .modal-body p.company-personell span.exhibitors {}
 
 .modal-dialog .modal-content .modal-body p.company-information {}
+
+.modal-dialog .modal-content .modal-body iframe.booth-iframe {
+    border: none;
+    width: 100%;
+    height: 100%;
+}
 
 .modal-dialog .modal-content .modal-footer {}
 

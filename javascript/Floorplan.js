@@ -17,28 +17,34 @@ var Floorplan = function (floorplanAppOptions) {
     this.navbarAboutButton = $('#navbar-button-about');
     this.navbarContactButton = $('#navbar-button-contact');
     
+    /**
+     * Interface Elements
+     **/
+    this.backgroundImageElement = $('#background-image');
+    this.bodyReference = $('body'); // cache this to avoid frequent DOM parsing (which is expensive).
+    this.zoomInElement = $('#zoom-in');
+    this.zoomOutElement = $('#zoom-out');
+    
+    /**
+     * Application data
+     **/
     // NOTE: Update this path depending on whether or not the relative path is included in the XML file.
 //    this.pathToLogos = 'images/logos';
     this.pathToLogos = '';
     this.availableBoothText = floorplanAppOptions.availableBoothText;
     this.boothFontSize = floorplanAppOptions.boothFontSize;
-    this.backgroundImageElement = $('#background-image');
-    this.bodyReference = $('body'); // cache this to avoid frequent DOM parsing (which is expensive).
-    this.zoomInElement = $('#zoom-in');
-    this.zoomOutElement = $('#zoom-out');
-
     this.backgroundImageElement.left = 0;
     this.backgroundImageElement.top = 0;
     this.backgroundImageScale = 1;
     this.backgroundImageZoomAmount = floorplanAppOptions.backgroundImageZoomAmount || 1.1;
     this.dragging = false;
+    this.initialZoomLevel = floorplanAppOptions.initialZoomLevel || 1;
     this.mouseX = 0;
     this.mouseY = 0;
     this.boothElements = {};
     this.modals = {};
 
-    // this.URL = 'http://activeeventtechnology.com/floorplantest.xml';
-    this.URL = './floorplantest.xml';
+    this.eventDataFilename = floorplanAppOptions.eventDataFilename;
 
     // Set custom page styles if set during instantiation.
     this.setPageStyles();
@@ -52,7 +58,7 @@ var Floorplan = function (floorplanAppOptions) {
 
 
 /**
- * Set font size of booth text from user input in <style> tag
+ * Set font size (in <style> tag) of booth text from user input
  **/
 Floorplan.prototype.setPageStyles = function () {
     $('head').append($('<style>.booth { font-size: ' + this.boothFontSize + '; }</style>'));
@@ -78,7 +84,7 @@ Floorplan.prototype.createAvailableBoothContent = function () {
 
 
 /**
- * Set the background image of draggable container.
+ * Set the background image and initial scale of draggable container.
  **/
 Floorplan.prototype.setBackgroundImage = function (backgroundImageData, containerMaxWidth, containerMaxHeight, imageContainer, optionalImageWidth, optionalImageHeight) {
     this.backgroundImageElement.naturalWidth = this.backgroundImageData.imageWidth;
@@ -111,6 +117,9 @@ Floorplan.prototype.setBackgroundImage = function (backgroundImageData, containe
     } else {
         this.backgroundImageScale = backgroundHeightScale;
     }
+    
+    // Multiply backgroundImageScale by initial zoom level
+    this.backgroundImageScale *= this.initialZoomLevel;
     
     this.backgroundImageElement[0].style.transform = 'scale(' + this.backgroundImageScale + ')';
     this.backgroundImageElement.removeClass('invisible');
@@ -145,47 +154,58 @@ Floorplan.prototype.positionBackgroundImage = function () {
  *
  * A booth object has the following keys:
  * 
- *   coordinatesLeftX:        (Int)
- *   coordinatesTopY:         (Int)
- *   boothWidth:              (Int)
- *   boothHeight:             (Int)
- *   boothNumber:             (Int)
- *   companyName:             (String)
- *   information:             (String)
- *   personell:               (Array of Strings)
- *   logo:                    (String)
- *   website:                 (String)       // TODO
- *   email:                   (String)       // TODO
- *   isAvailable:             (Bool)
- */
+ *   boothHeight:       (Int)
+ *   boothNumber:       (Int)
+ *   boothWidth:        (Int)
+ *   coordinatesLeftX:  (Int)
+ *   coordinatesTopY:   (Int)
+ *   colorBackground:   (Int)?
+ *   colorForeground:   (Int)?
+ *   email:             (String) // null
+ *   id:                (Int)
+ *   iframeReference:   (String)
+ *   information:       (String)
+ *   isAvailable:       (Bool)
+ *   logo:              (String)
+ *   organizationDesc:  (String)
+ *   personell:         (Array of Strings) // null
+ *   tooltip:           (String)
+ *   website:           (String) // null
+ **/
 Floorplan.prototype.createBoothElement = function (thisBoothData) {
-    var boothElement = $('<div class="alert booth no-text-selection" data-company="' + thisBoothData.companyName +
+//    var boothElement = $('<div class="alert booth no-text-selection" data-company="' + thisBoothData.companyName +
+    var boothElement = $('<div class="booth no-text-selection" data-company="' + thisBoothData.organizationDesc +
         '" data-toggle="modal" data-target="#modal-' + thisBoothData.boothNumber +
-        '" title="' + thisBoothData.companyName +
-        '" data-content="At this booth: ' + thisBoothData.personell +
+        '" title="' + thisBoothData.organizationDesc +
+//        '" data-content="At this booth: ' + thisBoothData.personell +
+        '" data-content="' + thisBoothData.tooltip +
         '"></div>'); // MODAL + POPOVER code
 
     // Instantiate tooltip and popover events on this element
     this.registerTooltipAndPopoverEvents(boothElement);
 
-    // Add colors from Bootstrap's alert models
-    if (thisBoothData.isAvailable) {
-        boothElement.addClass('alert-info');
-    } else {
-        boothElement.addClass('alert-warning');
-    }
+    // DEPRECATED - Add colors from Bootstrap's alert models
+//    if (thisBoothData.isAvailable) {
+//        boothElement.addClass('alert-info');
+//    } else {
+//        boothElement.addClass('alert-warning');
+//    }
 
     var boothNumberElement = $('<p class="booth-number" data-booth-number="' + thisBoothData.boothNumber + '">' + thisBoothData.boothNumber + '</p>');
-    var companyElement = $('<h4 class="company-name">' + thisBoothData.companyName + '</h4>');
-
+    var companyElement = $('<h4 class="company-name">' + thisBoothData.organizationDesc + '</h4>');
+    thisBoothData.colorForeground = Math.abs(Number.parseInt(thisBoothData.colorForeground)).toString(16);
+    thisBoothData.colorBackground = Math.abs(Number.parseInt(thisBoothData.colorBackground)).toString(16);
+    
     // Set unique CSS styles for this booth (primarily position)
     boothElement.css({
         left: (thisBoothData.coordinatesLeftX + this.measurementUnits),
         top: (thisBoothData.coordinatesTopY + this.measurementUnits),
         width: (thisBoothData.boothWidth + this.measurementUnits),
-        height: (thisBoothData.boothHeight + this.measurementUnits)
+        height: (thisBoothData.boothHeight + this.measurementUnits),
+        color: thisBoothData.colorForeground,
+        'background-color': thisBoothData.colorBackground
     });
-
+    
     // Add all boothData keys & values to the boothElement DOM Elememt
     for (key in thisBoothData) {
         boothElement[key] = thisBoothData[key];

@@ -7,14 +7,14 @@
  * Get and parse XML booth data
  **/
 Floorplan.prototype.getBoothData = function () {
-    $.get(this.eventDataFilename, (function (floorPlanXML, status, jqxhr) {
+    $.get((this.eventDataFilename + '.xml'), (function (floorPlanXML, status, jqxhr) {
             this.floorPlanXMLDocument = floorPlanXML.documentElement;
 
             // Cache name of event from XML <floorplan> "eventname" attribute.
             var pageXMLTag = this.floorPlanXMLDocument.querySelector('page');
-            this.eventName = pageXMLTag.getAttribute('eventname');
+            this.eventName = pageXMLTag.getAttribute('event');
             this.navbarBrandButton.text(this.eventName);
- 
+
             /**
              * Set the dimensions of the natural W & H of the
              * background image, as well as the relative URL.
@@ -74,7 +74,7 @@ Floorplan.prototype.getBoothData = function () {
                     tooltip: this.boothXMLElements[i].getAttribute('tooltip'),
                     website: this.boothXMLElements[i].getAttribute('website'), // currently null
                 };
-                
+
                 // Based on company name, determine if this booth is available or not.
                 if (thisBooth.organizationDesc.toLowerCase() === 'available') {
                     thisBooth.isAvailable = true;
@@ -86,7 +86,7 @@ Floorplan.prototype.getBoothData = function () {
                 if (thisBooth.personell === null && thisBooth.organizationDesc.toLowerCase() === 'available') {
                     thisBooth.personell = 'You?';
                 }
-                
+
                 this.createBoothElement(thisBooth);
             } // end for (each boothXMLElement)
         }).bind(this))
@@ -118,25 +118,3 @@ Floorplan.prototype.getBoothData = function () {
 // for (var key in window.dummyData) {
 //     arrayOfBoothData.push(window.dummyData[key]);
 // };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

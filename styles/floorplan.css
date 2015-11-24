@@ -125,7 +125,7 @@ body {
     font-size: inherit;
     pointer-events: none;
     text-overflow: clip;
-    color: #dddddd;
+/*    color: #dddddd;*/
 }
 
 .booth > p.booth-number {
@@ -220,7 +220,8 @@ body {
 }
 
 a.navbar-brand {
-    
+    min-width: 150px;
+    color: #5c5c5c!important;
 }
 
 a.navbar-brand:hover,
@@ -239,7 +240,7 @@ a.navbar-brand:hover,
 }
 
 a.navbar-brand:focus {
-    color: #9D9D9D!important;
+    color: #5c5c5c!important;
 }
 
 /**

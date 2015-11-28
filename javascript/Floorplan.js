@@ -1,3 +1,21 @@
+/** 
+ * Author: Aaron Melocik, github.com/SterlingVix
+ * Signed: 28 Nov 2015
+ * 
+ * This is the main function which instantiates a floorplan instance.
+ * It coordinates which .xml data file to download, retrieves the .xml data,
+ * parses the data for booth and exhibitor information, downloads additional
+ * resources, creates booth elements, populates booth elements, and populates
+ * filters and lists.
+ * 
+ * PARAMETERS:
+ *   floorplanAppOptions: @object, contains setup information including:
+ *     (TODO: obsolete?) eventDataFilename: OPTIONAL @string, floorplan .xml filename.
+ *     availableBoothText: OPTIONAL @string, default available booth text.
+ *     boothFontSize: OPTIONAL @string, default font size for floorplan booth overview.
+ *     initialZoomLevel: OPTIONAL @int, initial zoom level of floorplan view.
+ *     backgroundImageZoomAmount: OPTIONAL @int, amount of zoom on each scroll / click.
+ **/
 var Floorplan = function (floorplanAppOptions) {
     /**
      * Floorplan object class variables and container elements.

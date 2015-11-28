@@ -1,5 +1,8 @@
-/**
- * Modal parsing and rendering
+/** 
+ * Author: Aaron Melocik, github.com/SterlingVix
+ * Signed: 28 Nov 2015
+ * 
+ * This handles the Bootstrap modal parsing and rendering.
  **/
 
 /**

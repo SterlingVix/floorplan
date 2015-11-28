@@ -1,4 +1,7 @@
-/**
+/** 
+ * Author: Aaron Melocik, github.com/SterlingVix
+ * Signed: 28 Nov 2015
+ *  
  * Floorplan app events:
  *   registerNavButtons
  *   registerZoomEvents
@@ -7,6 +10,7 @@
  *   registerDragEvents
  *   registerTooltipAndPopoverEvents
  **/
+
 Floorplan.prototype.registerFloorplanEvents = function () {
     // Register events on the nav bar buttons
     this.registerNavButtons();

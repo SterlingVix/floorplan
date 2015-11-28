@@ -1,4 +1,7 @@
-/**
+/** 
+ * Author: Aaron Melocik, github.com/SterlingVix
+ * Signed: 28 Nov 2015
+ *  
  * Extends "Floorplan" - these are functions related 
  * to getting and parsing booth data on the server.
  **/

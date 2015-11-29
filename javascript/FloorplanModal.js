@@ -1,5 +1,8 @@
-/**
- * Modal parsing and rendering
+/** 
+ * Author: Aaron Melocik, github.com/SterlingVix
+ * Signed: 28 Nov 2015
+ * 
+ * This handles the Bootstrap modal parsing and rendering.
  **/
 
 /**
@@ -37,8 +40,20 @@ Floorplan.prototype.createModal = function (boothData) {
 
     // Update the placeholder strings if the booth is taken
     if (!boothData.isAvailable) {
-        favoriteButtonHTML = '<button type="button" class="btn btn-primary btn-favorite">Favorite <span id="zoom-in" class="glyphicon glyphicon-heart glyphicon-favorite"></span></button>';
-        // favoriteButtonHTML = '<button type="button" class="btn btn-primary">Favorite <span id="zoom-in" class="glyphicon glyphicon-star-empty glyphicon-favorite"></span></button>';
+        favoriteButtonHTML = '<button data-booth-number="' + boothData.boothNumber + '" type="button" class="btn btn-primary btn-favorite">Favorite <span id="zoom-in" class="glyphicon glyphicon-heart"></span></button>';
+        favoriteButtonHTML += '<button data-booth-number="' + boothData.boothNumber + '" type="button" class="btn btn-primary btn-favorite">Star <span id="zoom-in" class="glyphicon glyphicon glyphicon-star"></span></button>';
+        favoriteButtonHTML += '<button data-booth-number="' + boothData.boothNumber + '" type="button" class="btn btn-primary btn-favorite">Star <span id="zoom-in" class="glyphicon glyphicon-star-empty"></span></button>';
+        favoriteButtonHTML += '<button data-booth-number="' + boothData.boothNumber + '" type="button" class="btn btn-primary btn-favorite">Flag <span id="zoom-in" class="glyphicon glyphicon-flag"></span></button>';
+        favoriteButtonHTML += '<button data-booth-number="' + boothData.boothNumber + '" type="button" class="btn btn-primary btn-favorite">Thumbtack <span id="zoom-in" class="glyphicon glyphicon-pushpin"></span></button>';
+        favoriteButtonHTML += '<button data-booth-number="' + boothData.boothNumber + '" type="button" class="btn btn-primary btn-favorite">Check <span id="zoom-in" class="glyphicon glyphicon-ok"></span></button>';
+        favoriteButtonHTML += '<br />';
+        favoriteButtonHTML += '<button data-booth-number="' + boothData.boothNumber + '" type="button" class="btn btn-primary btn-favorite"><span id="zoom-in" class="glyphicon glyphicon-heart"></span> Favorite</button>';
+        favoriteButtonHTML += '<button data-booth-number="' + boothData.boothNumber + '" type="button" class="btn btn-primary btn-favorite"><span id="zoom-in" class="glyphicon glyphicon glyphicon-star"></span> Star</button>';
+        favoriteButtonHTML += '<button data-booth-number="' + boothData.boothNumber + '" type="button" class="btn btn-primary btn-favorite"><span id="zoom-in" class="glyphicon glyphicon-star-empty"></span> Star</button>';
+        favoriteButtonHTML += '<button data-booth-number="' + boothData.boothNumber + '" type="button" class="btn btn-primary btn-favorite"><span id="zoom-in" class="glyphicon glyphicon-flag"></span> Flag</button>';
+        favoriteButtonHTML += '<button data-booth-number="' + boothData.boothNumber + '" type="button" class="btn btn-primary btn-favorite"><span id="zoom-in" class="glyphicon glyphicon-pushpin"></span> Thumbtack</button>';
+        favoriteButtonHTML += '<button data-booth-number="' + boothData.boothNumber + '" type="button" class="btn btn-primary btn-favorite"><span id="zoom-in" class="glyphicon glyphicon-ok"></span> Check</button>';
+        // favoriteButtonHTML = '<button type="button" class="btn btn-primary">Favorite <span id="zoom-in" class="glyphicon glyphicon-star-empty"></span></button>';
 
         if (boothData.logo) {
             // modalImageHTML = ' <div class="modal-image-container"><img class="company-logo" src="' + this.pathToLogos + boothData.logo + '" /></div>';
@@ -53,11 +68,8 @@ Floorplan.prototype.createModal = function (boothData) {
     }
 
     // Long text strings for innerHTML of modal element
-    var modalHeaderHTML = '<div class="modal-header">'
-    + '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>'
-    + modalTitleHTML
-    + '</div>';
-    
+    var modalHeaderHTML = '<div class="modal-header">' + '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>' + modalTitleHTML + '</div>';
+
     /**
      * Old code:
      *
@@ -69,26 +81,11 @@ Floorplan.prototype.createModal = function (boothData) {
      *   + companyInformationHTML
      *   + '</div>';
      **/
-    var modalBodyHTML = '<div class="modal-body">'
-    + '<iframe id="booth-iframe-'
-    + boothData.boothNumber
-    + '" class="booth-iframe" href="'
-    + boothData.iframeReference
-    + '"></iframe>'
-    + '</div>';
-    
-    var modalFooterHTML = '<div class="modal-footer">'
-    + '<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>'
-    + favoriteButtonHTML
-    + '</div>';
-    
-    var modalHTML = '<div class="modal-dialog" role="document">'
-    + '    <div class="modal-content">'
-    + modalHeaderHTML
-    + modalBodyHTML
-    + modalFooterHTML
-    + '    </div>'
-    + '</div>';
+    var modalBodyHTML = '<div class="modal-body">' + '<iframe id="booth-iframe-' + boothData.boothNumber + '" class="booth-iframe" href="' + boothData.iframeReference + '"></iframe>' + '</div>';
+
+    var modalFooterHTML = '<div class="modal-footer">' + '<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>' + favoriteButtonHTML + '</div>';
+
+    var modalHTML = '<div class="modal-dialog" role="document">' + '    <div class="modal-content">' + modalHeaderHTML + modalBodyHTML + modalFooterHTML + '    </div>' + '</div>';
 
     // Assign innerHTML to modal element
     modal.html(modalHTML);
@@ -96,7 +93,7 @@ Floorplan.prototype.createModal = function (boothData) {
     // Hash this booth modal to the 'this.modals' object with [[boothNumber]] as the key.
     this.modals[boothData.boothNumber] = modal;
     this.bodyReference.append(this.modals[boothData.boothNumber]);
-    
+
     // Register button event on Favorite button
     this.registerFavoriteButton((this.modals[boothData.boothNumber]).find('.btn-favorite'));
 }; // end createModal()
@@ -121,3 +118,14 @@ Floorplan.prototype.renderModalElements = function () {
         this.createModal(this.boothElements[key]);
     }
 }; // end renderModalElements()
+
+
+/**
+ * Capitalize the first letter of strings, from
+ * http://codereview.stackexchange.com/questions/77614/capitalize-the-first-character-of-all-words-even-when-following-a
+ **/
+String.prototype.capitalize = function () {
+    return this.toLowerCase().replace(/\b\w/g, function (m) {
+        return m.toUpperCase();
+    });
+};

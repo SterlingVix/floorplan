@@ -1,20 +1,46 @@
+/** 
+ * Author: Aaron Melocik, github.com/SterlingVix
+ * Signed: 28 Nov 2015
+ * 
+ * This is the main function which instantiates a floorplan instance.
+ * It coordinates which .xml data file to download, retrieves the .xml data,
+ * parses the data for booth and exhibitor information, downloads additional
+ * resources, creates booth elements, populates booth elements, and populates
+ * filters and lists.
+ * 
+ * PARAMETERS:
+ *   floorplanAppOptions: @object, contains setup information including:
+ *     (TODO: obsolete?) eventDataFilename: OPTIONAL @string, floorplan .xml filename.
+ *     availableBoothText: OPTIONAL @string, default available booth text.
+ *     boothFontSize: OPTIONAL @string, default font size for floorplan booth overview.
+ *     initialZoomLevel: OPTIONAL @int, initial zoom level of floorplan view.
+ *     backgroundImageZoomAmount: OPTIONAL @int, amount of zoom on each scroll / click.
+ **/
 var Floorplan = function (floorplanAppOptions) {
     /**
      * Floorplan object class variables and container elements.
      **/
+
+    //TEMP
+    window.my = this;
+
+
     this.appContainer = $('.app-container');
     this.aboutContainer = $('#about-page');
     this.contactContainer = $('#contact-page');
+    this.exhibitorListContainer = $('#exhibitor-list-container');
+    this.exhibitorUnorderedListElement = $('#exhibitor-list-main-list');
     this.containerMaxWidth = floorplanAppOptions.optionalContainerMaxWidth || '1300px';
     this.containerMaxHeight = floorplanAppOptions.optionalContainerMaxHeight || '700px';
-    this.measurementUnits = 'px';
     this.eventName = '';
+    this.measurementUnits = 'px';
 
     /**
      * Nav bar elements
      **/
     this.navbarBrandButton = $('.navbar-brand');
-    this.navbarHomeButton = $('#navbar-button-home a');
+    this.navbarHomeButton = $('#navbar-button-home');
+    this.navbarExhibitorListButton = $('#navbar-button-exhibitor-list');
     this.navbarAboutButton = $('#navbar-button-about');
     this.navbarContactButton = $('#navbar-button-contact');
 
@@ -25,12 +51,12 @@ var Floorplan = function (floorplanAppOptions) {
     this.bodyReference = $('body'); // cache this to avoid frequent DOM parsing (which is expensive).
     this.zoomInElement = $('#zoom-in');
     this.zoomOutElement = $('#zoom-out');
+    this.clearAllButton = $('#clear-all');
 
     /**
      * Application data
      **/
     // NOTE: Update this path depending on whether or not the relative path is included in the XML file.
-    //    this.pathToLogos = 'images/logos';
     this.pathToLogos = '';
     this.availableBoothText = floorplanAppOptions.availableBoothText;
     this.boothFontSize = floorplanAppOptions.boothFontSize;
@@ -43,6 +69,10 @@ var Floorplan = function (floorplanAppOptions) {
     this.mouseX = 0;
     this.mouseY = 0;
     this.boothElements = {};
+    this.exhibitorLiElements = {};
+    this.exhibitorSortedNames = [];
+    this.productsMap = {}; // object of arrays of booths by product key
+
     this.modals = {};
 
     // Get the eventDataFilename from either the floorplanAppOptions parameter or the URL
@@ -71,9 +101,10 @@ Floorplan.prototype.getEventDataFilename = function (floorplanAppOptions) {
         this.eventDataFilename = (thisURL.substring(hashLocation, thisURL.length));
 
         // Update HOME and eventButton hrefs. Use innerHTML for Home button.
+        var homeAnchor = this.navbarHomeButton.find('a');
+        homeAnchor.attr('href', ('#' + this.eventDataFilename));
+        // this.navbarHomeButton.attr('href', ('#' + this.eventDataFilename));
         this.navbarBrandButton.attr('href', ('#' + this.eventDataFilename));
-        this.navbarHomeButton.attr('href', ('#' + this.eventDataFilename));
-//        this.navbarHomeButton.innerHTML = '<a href="#' + this.eventDataFilename + '">Home</a>';
     }
 }; // end getEventDataFilename()
 
@@ -118,7 +149,6 @@ Floorplan.prototype.setBackgroundImage = function (backgroundImageData, containe
     var containedImageHeight = (this.appContainer.height() * 0.8);
 
     // Set background image URL for element
-    //    this.backgroundImageElement[0].style['background-image'] = 'url(' + backgroundImageData.imageURL + ')';
     this.backgroundImageElement.css({
         'width': this.backgroundImageElement.naturalWidth,
         'height': this.backgroundImageElement.naturalHeight,
@@ -173,7 +203,7 @@ Floorplan.prototype.positionBackgroundImage = function () {
  * as well as the elements to insert into the DOM and
  * modal popup data.
  *
- * A booth object has the following keys:
+ * A booth object has the following keys (NOTE: this needs updating):
  * 
  *   boothHeight:       (Int)
  *   boothNumber:       (Int)
@@ -182,38 +212,93 @@ Floorplan.prototype.positionBackgroundImage = function () {
  *   coordinatesTopY:   (Int)
  *   colorBackground:   (Int)?
  *   colorForeground:   (Int)?
+ *   description:       (String)
  *   email:             (String) // null
  *   id:                (Int)
  *   iframeReference:   (String)
  *   information:       (String)
  *   isAvailable:       (Bool)
  *   logo:              (String)
- *   organizationDesc:  (String)
+ *   organizationDescription:  (String)
  *   personell:         (Array of Strings) // null
  *   tooltip:           (String)
  *   website:           (String) // null
  **/
 Floorplan.prototype.createBoothElement = function (thisBoothData) {
     //    var boothElement = $('<div class="alert booth no-text-selection" data-company="' + thisBoothData.companyName +
-    var boothElement = $('<div class="booth no-text-selection" data-company="' + thisBoothData.organizationDesc +
+    var boothElement = $('<div class="booth no-text-selection" data-company="' + thisBoothData.organizationDescription +
         '" data-toggle="modal" data-target="#modal-' + thisBoothData.boothNumber +
-        '" title="' + thisBoothData.organizationDesc +
+        '" title="' + thisBoothData.organizationDescription +
         // '" data-content="At this booth: ' + thisBoothData.personell +
         '" data-content="' + thisBoothData.tooltip +
         '"></div>'); // MODAL + POPOVER code
 
+    /**
+     * Convert 'products' key to an array of strings
+     **/
+    if (!!thisBoothData.products) {
+        // Split this string into an array of strings
+        var regExpCommasWithSpaces = /\s*,\s*/;
+        thisBoothData.products = thisBoothData.products.split(regExpCommasWithSpaces);
+
+        for (var i = 0; i < thisBoothData.products.length; i++) {
+            // Capitalize thefirst letter of each string
+            thisBoothData.products[i] = thisBoothData.products[i].capitalize();
+
+            if (!this.productsMap[thisBoothData.products[i]]) {
+                // Product is not yet a key, so add it with an empty array value.
+                this.productsMap[thisBoothData.products[i]] = [];
+            }
+
+            // Push this booth onto the product array
+            this.productsMap[thisBoothData.products[i]].push(boothElement);
+        }
+    }
+
+
+    // Add a 'flagged' icon (hidden by default) to this element
+    //    var flagElemenet = $('<span class="hidden booth-flag glyphicon glyphicon-heart"></span>');
+    //    var flagElemenet = $('<span class="hidden booth-flag glyphicon glyphicon glyphicon-star"></span>');
+    //    var flagElemenet = $('<span class="hidden booth-flag glyphicon glyphicon-star-empty"></span>');
+    var flagElemenet = $('<span class="hidden booth-flag glyphicon glyphicon-flag"></span>');
+    //    var flagElemenet = $('<span class="hidden booth-flag glyphicon glyphicon-pushpin"></span>');
+    //    var flagElemenet = $('<span class="hidden booth-flag glyphicon glyphicon-ok"></span>');
+    boothElement.append(flagElemenet);
+
     // Instantiate tooltip and popover events on this element
     this.registerTooltipAndPopoverEvents(boothElement);
 
-    // DEPRECATED - Add colors from Bootstrap's alert models
-    //    if (thisBoothData.isAvailable) {
-    // boothElement.addClass('alert-info');
-    //    } else {
-    // boothElement.addClass('alert-warning');
-    //    }
+    // Create exhibitor list item for populated booths
+    if (!thisBoothData.isAvailable) {
+
+        // Flag duplicate booth names and handle multiple-booth highlighting
+        if (!!this.exhibitorLiElements[thisBoothData.organizationDescription]) {
+            // console.warn('WARNING:', thisBoothData.organizationDescription, 'is already a key.');
+            // console.log('  existing booth is', this.exhibitorLiElements[thisBoothData.organizationDescription]);
+            // console.log('  this booth is', thisBoothData);
+            // console.log('Adding another data-booth-number value.');
+
+            var existingDataBoothValue = this.exhibitorLiElements[thisBoothData.organizationDescription].attr('data-booth-number');
+            existingDataBoothValue += ',';
+            existingDataBoothValue += thisBoothData.boothNumber;
+
+            this.exhibitorLiElements[thisBoothData.organizationDescription].attr('data-booth-number', existingDataBoothValue);
+        } else {
+            // Create new exhibitorLiElement
+            this.exhibitorLiElements[thisBoothData.organizationDescription] = $('<li type="button" class="btn btn-clear exhibitor-li">');
+            // thisBooth.exhibitorListCompanyNameElement = $('<button type="button" class="btn btn-clear exhibitor-li">');
+            this.exhibitorLiElements[thisBoothData.organizationDescription].text(thisBoothData.organizationDescription);
+            this.exhibitorLiElements[thisBoothData.organizationDescription].attr('data-booth-number', thisBoothData.boothNumber);
+            this.exhibitorLiElements[thisBoothData.organizationDescription].attr('data-highlighted', 'false');
+            this.exhibitorLiElements[thisBoothData.organizationDescription].attr('data-color-palette', 'color3');
+
+            // Push exhibitor name onto temporary array for later sorting and appending elements.
+            this.exhibitorSortedNames.push(thisBoothData.organizationDescription);
+        }
+    }
 
     var boothNumberElement = $('<p class="booth-number" data-booth-number="' + thisBoothData.boothNumber + '">' + thisBoothData.boothNumber + '</p>');
-    var companyElement = $('<h4 class="company-name">' + thisBoothData.organizationDesc + '</h4>');
+    var companyElement = $('<h4 class="company-name">' + thisBoothData.organizationDescription + '</h4>');
 
     // Set unique CSS styles for this booth (primarily position)
     boothElement.css({
@@ -221,7 +306,7 @@ Floorplan.prototype.createBoothElement = function (thisBoothData) {
         top: (thisBoothData.coordinatesTopY + this.measurementUnits),
         width: (thisBoothData.boothWidth + this.measurementUnits),
         height: (thisBoothData.boothHeight + this.measurementUnits),
-        // color: thisBoothData.colorForeground,
+        color: thisBoothData.colorForeground,
         'background-color': thisBoothData.colorBackground
     });
 

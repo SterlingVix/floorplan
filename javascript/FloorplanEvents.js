@@ -1,4 +1,7 @@
-/**
+/** 
+ * Author: Aaron Melocik, github.com/SterlingVix
+ * Signed: 28 Nov 2015
+ *  
  * Floorplan app events:
  *   registerNavButtons
  *   registerZoomEvents
@@ -7,15 +10,19 @@
  *   registerDragEvents
  *   registerTooltipAndPopoverEvents
  **/
+
 Floorplan.prototype.registerFloorplanEvents = function () {
     // Register events on the nav bar buttons
     this.registerNavButtons();
-    
+
     // Register events on the zoom buttons
     this.registerZoomEvents();
 
     // Register dragging events
     this.registerDragEvents();
+
+    // Register clear all highlights event
+    this.registerClearAllButton();
 }; // end registerFloorplanEvents()
 
 
@@ -25,28 +32,47 @@ Floorplan.prototype.registerFloorplanEvents = function () {
  *   the 'Home' button function.
  **/
 Floorplan.prototype.registerNavButtons = function () {
-    // Add event listeners
-    this.navbarHomeButton.on('click', (function(event) {
+    // UPDATE: This used tp defer the main button to the 'Home' button function.
+    // Now it closes the exhibitorList drawer
+    this.navbarBrandButton.on('click', (function (event) {
+//        this.navbarHomeButton.click();     
+        if (!!this.navbarExhibitorListButton[0].isActiveFlag === true) {
+            this.navbarExhibitorListButton.click();
+        }
+    }).bind(this)); // and addEventListener(click navbar main brand button)
+
+    this.navbarHomeButton.on('click', (function (event) {
         this.updateActiveNavbarButton(event.delegateTarget);
         this.appContainer.removeClass('hidden');
     }).bind(this)); // and addEventListener(click navbar 'home' button)
-    
-    this.navbarAboutButton.on('click', (function(event) {
+
+    this.navbarExhibitorListButton.on('click', (function (event) {
+        // Flip the active state of this element
+        if (!event.delegateTarget.isActiveFlag) {            
+            
+            // isActiveFlag is false or doesn't exist, so activate
+            event.delegateTarget.isActiveFlag = true;
+            $(event.delegateTarget).addClass('active');
+//            this.exhibitorListContainer.removeClass('hidden');
+            this.exhibitorListContainer.removeClass('closed');
+        } else {
+            // isActiveFlag is true, so deactivate
+            event.delegateTarget.isActiveFlag = false;
+            $(event.delegateTarget).removeClass('active');
+//            this.exhibitorListContainer.addClass('hidden');
+            this.exhibitorListContainer.addClass('closed');
+        }
+    }).bind(this)); // and addEventListener(click navbar 'about' button)
+
+    this.navbarAboutButton.on('click', (function (event) {
         this.updateActiveNavbarButton(event.delegateTarget);
         this.aboutContainer.removeClass('hidden');
     }).bind(this)); // and addEventListener(click navbar 'about' button)
-    
-    this.navbarContactButton.on('click', (function(event) {
+
+    this.navbarContactButton.on('click', (function (event) {
         this.updateActiveNavbarButton(event.delegateTarget);
         this.contactContainer.removeClass('hidden');
     }).bind(this)); // and addEventListener(click navbar 'contact' button)
-    
-    // Defer the main button to the 'Home' button function
-    this.navbarBrandButton.on('click', (function(event) {
-        this.updateActiveNavbarButton(this.navbarHomeButton);
-        this.appContainer.removeClass('hidden');
-    }).bind(this)); // and addEventListener(click navbar main brand button)
-    
 }; // end registerNavButtons
 
 
@@ -57,12 +83,13 @@ Floorplan.prototype.updateActiveNavbarButton = function (clickedButton) {
     // Remove the class 'active' from all buttons
     this.navbarBrandButton.removeClass('active');
     this.navbarHomeButton.removeClass('active');
+    //    this.navbarExhibitorListButton.removeClass('active');
     this.navbarAboutButton.removeClass('active');
     this.navbarContactButton.removeClass('active');
-    
+
     // Add the class 'active' to the selected button
     $(clickedButton).addClass('active');
-    
+
     // Hide all pages and let the calling function remove the 'hidden' tag
     this.appContainer.addClass('hidden');
     this.aboutContainer.addClass('hidden');
@@ -161,13 +188,95 @@ Floorplan.prototype.registerTooltipAndPopoverEvents = function (boothElement) {
         $(event.delegateTarget).popover('hide');
     });
 }; // end registerTooltipAndPopoverEvents(boothElement)
-    
+
 
 /**
  * Register function of "favorite" button in modal
  **/
-Floorplan.prototype.registerFavoriteButton = function(favoriteButton) {
-    favoriteButton.on('click', (function(event) {
-        console.log('clicked favorite button at', event.delegateTarget);
-    }).bind(this)); // end (cick favorite button)
+Floorplan.prototype.registerFavoriteButton = function (favoriteButton) {
+    favoriteButton.on('click', (function (event) {
+        // Get booth number for booth to flag
+        var boothNumberToFlag = $(event.delegateTarget).attr('data-booth-number');
+        boothNumberToFlag = parseInt(boothNumberToFlag);
+        
+        // Get reference to booth flag span element
+        var thisFlag = this.boothElements[boothNumberToFlag];
+        thisFlag = thisFlag.find('.booth-flag');
+        
+        // Flip the active state of this element
+        if (!event.delegateTarget.isActiveFlag) {            
+            // isActiveFlag is false or doesn't exist, so activate
+            event.delegateTarget.isActiveFlag = true;
+            $(event.delegateTarget).addClass('active');
+            thisFlag.removeClass('hidden');
+        } else {
+            // isActiveFlag is true, so deactivate
+            event.delegateTarget.isActiveFlag = false;
+            $(event.delegateTarget).removeClass('active');
+            thisFlag.addClass('hidden');
+        }        
+    }).bind(this)); // end (click favorite button)
 }; // end registerFavoriteButton()
+
+
+/**
+ * Register highlighting function of clicking exhibitor names from list
+ **/
+Floorplan.prototype.registerExhibitorHighlightButton = function (exhibitorElement) {
+    exhibitorElement.on('click', (function (event) {
+
+        // Get booth number from element
+        var boothNumber = exhibitorElement.attr('data-booth-number');
+
+        // Convert boothNumber to array to handle multiple booths with same company name
+        var boothNumberArray = boothNumber.split(',');
+
+        // Get highlighted value from element
+        var isHighlighted = exhibitorElement.attr('data-highlighted');
+        
+        // If this element is highlighted, 
+        if (isHighlighted === 'true') {
+            exhibitorElement.attr('data-highlighted', 'false');
+            exhibitorElement.attr('data-color-palette', 'color3');
+            exhibitorElement.removeClass('highlighted');
+
+            // Un-highlight booths for all booth numbers in the array
+            for (var i = 0; i < boothNumberArray.length; i++) {
+                var thisBoothNumber = parseInt(boothNumberArray[i]);
+                this.boothElements[thisBoothNumber].removeClass('highlighted');
+            }
+        } else {
+            // element is not highlighted
+            exhibitorElement.attr('data-highlighted', 'true');
+            exhibitorElement.attr('data-color-palette', 'color2');
+            exhibitorElement.addClass('highlighted');
+
+            // Highlight booths for all booth numbers in the array
+            for (var i = 0; i < boothNumberArray.length; i++) {
+                var thisBoothNumber = parseInt(boothNumberArray[i]);
+                this.boothElements[thisBoothNumber].addClass('highlighted');
+            }
+        } // end if-else (exhibitor elements are highlighted)
+    }).bind(this)); // end (click favorite button)
+}; // end registerExhibitorHighlightButton()
+
+
+/**
+ * Register function of "Clear All" button in exhibitors list
+ **/
+Floorplan.prototype.registerClearAllButton = function () {
+
+    this.clearAllButton.on('click', (function (event) {
+        // console.log('clicked clear all button at', event.delegateTarget);
+        var highlightedElements = $('.highlighted');
+
+        for (var i = 0; i < highlightedElements.length; i++) {
+            $(highlightedElements[i]).removeClass('highlighted');
+            if ( ($(highlightedElements[i]).attr('data-highlighted')) === 'true') {
+                $(highlightedElements[i]).attr('data-highlighted', 'false');
+                $(highlightedElements[i]).attr('data-color-palette', 'color3');
+            }
+        } // end for (all highlighted elements)
+
+    }).bind(this)); // end (click clear all button)
+}; // end registerClearAllButton()

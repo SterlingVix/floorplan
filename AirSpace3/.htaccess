@@ -1,0 +1,15 @@
+SetEnvIf Referer localhost authenticated_local
+SetEnvIf Referer www.activeevent.net authenticated_server
+SetEnvIf Referer activeevent.net authenticated_server
+SetEnv default_env
+<IfModule authz_core_module>
+    <RequireAny>
+        Require env authenticated_local
+        Require env authenticated_server
+        Require env default_env
+    </RequireAny>
+</IfModule>
+<IfModule !authz_core_module>
+    Order allow,deny
+    Allow from all
+</IfModule>

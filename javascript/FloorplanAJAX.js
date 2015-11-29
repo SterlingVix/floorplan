@@ -28,7 +28,7 @@ Floorplan.prototype.getBoothData = function () {
             this.backgroundImageData = {
                 imageWidth: Number.parseInt(this.backgroundImageXMLData.getAttribute('naturalw')),
                 imageHeight: Number.parseInt(this.backgroundImageXMLData.getAttribute('naturalh')),
-                imageURL: this.backgroundImageXMLData.getAttribute('imagename')
+                imageURL: this.eventDataFilename + '/images/' + this.backgroundImageXMLData.getAttribute('imagename')
             };
 
             // Assign backgroundImage of app-container
@@ -53,8 +53,9 @@ Floorplan.prototype.getBoothData = function () {
                  *   iframeReference:   iframe + '?id=' + number
                  *   information:       desc
                  *   logo:              logo       // currently null
-                 *   organizationDesc:  org
+                 *   organizationDescription:  org
                  *   personell:         header     // currently null
+                 *   products:          products   // may or may not be present
                  *   tooltip:           tooltip
                  *   website:           website    // currently null
                  **/
@@ -67,31 +68,67 @@ Floorplan.prototype.getBoothData = function () {
                     coordinatesTopY: Number.parseInt(this.boothXMLElements[i].getAttribute('y')),
                     colorBackground: this.boothXMLElements[i].getAttribute('bc'),
                     colorForeground: this.boothXMLElements[i].getAttribute('fc'),
+                    description: this.boothXMLElements[i].getAttribute('desc'),
                     email: this.boothXMLElements[i].getAttribute('email'), // currently null
                     id: ('booth-' + thisBoothNumber),
-                    iframeReference: ((this.boothXMLElements[i].getAttribute('iframe')) + '?id=' + thisBoothNumber),
+                    // iframeReference: ((this.boothXMLElements[i].getAttribute('iframe')) + '?id=' + thisBoothNumber),
+                    iframeReference: (this.eventDataFilename + '/' + (this.boothXMLElements[i].getAttribute('iframe'))),
                     information: this.boothXMLElements[i].getAttribute('desc'),
                     logo: this.boothXMLElements[i].getAttribute('logo'), // currently null
-                    organizationDesc: this.boothXMLElements[i].getAttribute('org'),
+                    organizationDescription: this.boothXMLElements[i].getAttribute('org'),
                     personell: this.boothXMLElements[i].getAttribute('header'), // currently null
+                    products: this.boothXMLElements[i].getAttribute('products'), // currently null
                     tooltip: this.boothXMLElements[i].getAttribute('tooltip'),
                     website: this.boothXMLElements[i].getAttribute('website'), // currently null
                 };
 
-                // Based on company name, determine if this booth is available or not.
-                if (thisBooth.organizationDesc.toLowerCase() === 'available') {
+                /**
+                 * Update 'isAvailable' key based on availability. If
+                 * booth is occupied, add company name to exhibitor list.
+                 **/
+
+                if (thisBooth.description.toLowerCase() === 'available' || thisBooth.description === '') {
                     thisBooth.isAvailable = true;
                 } else {
                     thisBooth.isAvailable = false;
                 }
 
                 thisBooth.information = this.boothXMLElements[i].getAttribute('desc');
-                if (thisBooth.personell === null && thisBooth.organizationDesc.toLowerCase() === 'available') {
+                if (thisBooth.personell === null && thisBooth.organizationDescription.toLowerCase() === 'available') {
                     thisBooth.personell = 'You?';
                 }
 
                 this.createBoothElement(thisBooth);
             } // end for (each boothXMLElement)
+
+            /**
+             * Now that all the booth data is parsed,
+             * update the length of the exhibitorLiElements,
+             * then sort the array of exhibitor names,
+             * then determine the longest name & add a class
+             * then append elements to exhibitorLiElements,
+             * then register the highlight function on the element.
+             **/
+            this.exhibitorLiElements.length = this.exhibitorSortedNames.length;
+            this.exhibitorSortedNames.sort();
+
+            // This name length code is obsolete, but inexpensive, so I'm leaving it.
+            var longestName = this.exhibitorLiElements[this.exhibitorSortedNames[0]];
+
+            for (var i = 0, length = this.exhibitorSortedNames.length; i < length; i++) {
+                var lengthOfThisExhibitorsName = ((this.exhibitorLiElements[this.exhibitorSortedNames[i]]).text().length);
+
+                if (lengthOfThisExhibitorsName > (longestName.text().length)) {
+                    // console.log('updating longest name from', (longestName.text()), ',', longestName.text().length, 'to', (this.exhibitorLiElements[this.exhibitorSortedNames[i]]).text(), ',', (this.exhibitorLiElements[this.exhibitorSortedNames[i]]).text().length);
+                    longestName.removeClass('longest-name');
+                    longestName = this.exhibitorLiElements[this.exhibitorSortedNames[i]];
+                    longestName.addClass('longest-name');
+                }
+                this.exhibitorUnorderedListElement.append(this.exhibitorLiElements[this.exhibitorSortedNames[i]]);
+                this.registerExhibitorHighlightButton((this.exhibitorLiElements[this.exhibitorSortedNames[i]]));
+            }; // end for (exhibitorSortedNames)
+
+
         }).bind(this))
         .done((function (floorPlanXML, status, jqxhr) {
             // Register all events

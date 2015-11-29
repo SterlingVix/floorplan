@@ -80,15 +80,16 @@ body {
 }
 
 #background-image {
-    background-repeat: no-repeat;
     background-position: center;
+    background-repeat: no-repeat;
     background-size: contain;
     display: block;
-    /*    text-align: center;*/
-    vertical-align: middle;
-    position: relative;
-    transform-origin: center;
     opacity: 1;
+    overflow: hidden;
+    position: relative;
+    /* text-align: center; */
+    transform-origin: center;
+    vertical-align: middle;
     /* Animations for zooming and dragging. Change speeds here. */
     -webkit-transition: transform 150ms ease-out, opacity 222ms ease-in 150ms;
     -moz-transition: transform 150ms ease-out, opacity 222ms ease-in 150ms;
@@ -146,6 +147,16 @@ body {
     overflow: hidden;
 }
 
+.booth-flag {
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0.25em;
+    z-index: 9;
+    font-size: 2em;
+    color: #e74c3c;
+}
 
 
 /*
@@ -229,17 +240,14 @@ a.navbar-brand {
     color: #5c5c5c!important;
 }
 
-a.navbar-brand:hover,
-#navbar-button-home a:hover,
-#navbar-button-about a:hover,
-#navbar-button-contact a:hover {
+.navbar-button a:hover {
     color: #2c3e50!important;
+    cursor: pointer;
 /*    background-color: rgba(0, 0, 0, 0.5)!important;*/
 }
 
-#navbar-button-home.active a:hover,
-#navbar-button-about.active a:hover,
-#navbar-button-contact.active a:hover {
+.navbar-button.active a:hover {
+    cursor: pointer;
     color: #fff!important;
 /*    background-color: #000!important;*/
 }
@@ -276,6 +284,101 @@ a.navbar-brand:focus {
 .modal-dialog .modal-content .modal-header h4.modal-title {
     font-size: 2em;
     /*    z-index: 10;*/
+}
+
+
+/**
+ * Exhibitors List panel
+ **/
+
+/* Exhibitor list container (as a Bootstrap panel) */
+#exhibitor-list-container {
+    z-index: 10;
+    display: inline-block;
+    position: absolute;
+    height: 100%;
+    top: 0;
+    left: 0;
+    border-right: double 2px darkgrey;
+/*    min-width: 10%;*/
+    max-width: 44%;
+    transform: translateX(0%);
+    /* Animations for sliding drawer out. */
+    -webkit-transition: transform 200ms ease-out;
+    -moz-transition: transform 200ms ease-out;
+    -o-transition: transform 200ms ease-out;
+    transition: transform 200ms ease-out;
+}
+
+#exhibitor-list-container.closed {
+    transform: translateX(-100%);
+    /* Animations for sliding drawer out. */
+    -webkit-transition: transform 200ms ease-out;
+    -moz-transition: transform 200ms ease-out;
+    -o-transition: transform 200ms ease-out;
+    transition: transform 200ms ease-out;
+}
+
+#exhibitor-list-container .panel-heading {
+/*    padding: 1.2em;*/
+    text-align: left;
+    color: white;
+}
+
+.panel-heading .panel-heading-item {
+    display: inline-block;
+    padding: 0px!important;
+    margin: 0px!important;
+    width: 49%;
+    overflow: hidden;
+}
+.panel-heading .panel-heading-item h3 {
+    line-height: 2em;
+    font-size: 1.2em;
+}
+
+#clear-all {
+    margin: 0em 1em 0em 1.6em;
+}
+
+#exhibitor-list-main-list {
+    overflow-y: auto;
+    overflow-x: hidden;
+    display: inline-block;
+}
+
+
+.exhibitor-li {
+    width: 100%;
+    display: inline;
+    display: block;
+    margin: 0.25em auto;
+}
+
+.exhibitor-li[data-color-palette="color2"]:hover {
+    color: #e8e8e8;
+}
+
+.exhibitor-li.longest-name {
+    /* OBSOLETE */
+}
+
+/**
+* Booth highlighting styles
+**/
+.booth.highlighted {
+    -webkit-box-shadow: 0px 0px 5px 4px #e74c3c;
+       -moz-box-shadow: 0px 0px 5px 4px #e74c3c;
+            box-shadow: 0px 0px 5px 4px #e74c3c; 
+}
+
+/*
+li.exhibitor-li[data-highlighted="true"] {
+    background-color: yellow;
+}
+*/
+
+li.exhibitor-li[data-highlighted="false"] {
 }
 
 
@@ -335,7 +438,9 @@ a.navbar-brand:focus {
 
 .modal-dialog .modal-content .modal-footer {}
 
-.modal-dialog .modal-content .modal-footer button.btn {}
+.modal-dialog .modal-content .modal-footer .btn-favorite {
+    margin-top: 0.25em;
+}
 
 .modal-dialog .modal-content .modal-footer button.btn span.glyphicon {}
 

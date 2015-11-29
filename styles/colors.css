@@ -57,6 +57,8 @@ Corporate Blues:
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffe74c3c', endColorstr='#ffc74333', GradientType=0);
     filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
     background-repeat: repeat-x;
+    color: #ecf0f1;
+    color: white;
 }
 
 
@@ -69,6 +71,7 @@ Corporate Blues:
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffecf0f1', endColorstr='#ffd4dfe2', GradientType=0);
     filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
     background-repeat: repeat-x;
+    color: #5c5c5c;
 }
 
 [data-color-palette="color4"] {

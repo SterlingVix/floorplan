@@ -438,8 +438,17 @@ li.exhibitor-li[data-highlighted="false"] {
 
 .modal-dialog .modal-content .modal-footer {}
 
-.modal-dialog .modal-content .modal-footer .btn-favorite {
-    margin-top: 0.25em;
+.modal-dialog .modal-content .modal-footer .btn-flag {
+}
+
+.modal-dialog .modal-content .modal-footer .btn-flag[data-color-palette="color5"] {
+    border: solid 1px #c1c1c1;
+    color: white;
+}
+
+.modal-dialog .modal-content .modal-footer .btn-flag[data-color-palette="color5"]:hover {
+    color: #e8e8e8;
+    border-color: #959595;
 }
 
 .modal-dialog .modal-content .modal-footer button.btn span.glyphicon {}

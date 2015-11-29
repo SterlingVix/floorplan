@@ -40,20 +40,17 @@ Floorplan.prototype.createModal = function (boothData) {
 
     // Update the placeholder strings if the booth is taken
     if (!boothData.isAvailable) {
-        favoriteButtonHTML = '<button data-booth-number="' + boothData.boothNumber + '" type="button" class="btn btn-primary btn-favorite">Favorite <span id="zoom-in" class="glyphicon glyphicon-heart"></span></button>';
-        favoriteButtonHTML += '<button data-booth-number="' + boothData.boothNumber + '" type="button" class="btn btn-primary btn-favorite">Star <span id="zoom-in" class="glyphicon glyphicon glyphicon-star"></span></button>';
-        favoriteButtonHTML += '<button data-booth-number="' + boothData.boothNumber + '" type="button" class="btn btn-primary btn-favorite">Star <span id="zoom-in" class="glyphicon glyphicon-star-empty"></span></button>';
-        favoriteButtonHTML += '<button data-booth-number="' + boothData.boothNumber + '" type="button" class="btn btn-primary btn-favorite">Flag <span id="zoom-in" class="glyphicon glyphicon-flag"></span></button>';
-        favoriteButtonHTML += '<button data-booth-number="' + boothData.boothNumber + '" type="button" class="btn btn-primary btn-favorite">Thumbtack <span id="zoom-in" class="glyphicon glyphicon-pushpin"></span></button>';
-        favoriteButtonHTML += '<button data-booth-number="' + boothData.boothNumber + '" type="button" class="btn btn-primary btn-favorite">Check <span id="zoom-in" class="glyphicon glyphicon-ok"></span></button>';
-        favoriteButtonHTML += '<br />';
-        favoriteButtonHTML += '<button data-booth-number="' + boothData.boothNumber + '" type="button" class="btn btn-primary btn-favorite"><span id="zoom-in" class="glyphicon glyphicon-heart"></span> Favorite</button>';
-        favoriteButtonHTML += '<button data-booth-number="' + boothData.boothNumber + '" type="button" class="btn btn-primary btn-favorite"><span id="zoom-in" class="glyphicon glyphicon glyphicon-star"></span> Star</button>';
-        favoriteButtonHTML += '<button data-booth-number="' + boothData.boothNumber + '" type="button" class="btn btn-primary btn-favorite"><span id="zoom-in" class="glyphicon glyphicon-star-empty"></span> Star</button>';
-        favoriteButtonHTML += '<button data-booth-number="' + boothData.boothNumber + '" type="button" class="btn btn-primary btn-favorite"><span id="zoom-in" class="glyphicon glyphicon-flag"></span> Flag</button>';
-        favoriteButtonHTML += '<button data-booth-number="' + boothData.boothNumber + '" type="button" class="btn btn-primary btn-favorite"><span id="zoom-in" class="glyphicon glyphicon-pushpin"></span> Thumbtack</button>';
-        favoriteButtonHTML += '<button data-booth-number="' + boothData.boothNumber + '" type="button" class="btn btn-primary btn-favorite"><span id="zoom-in" class="glyphicon glyphicon-ok"></span> Check</button>';
-        // favoriteButtonHTML = '<button type="button" class="btn btn-primary">Favorite <span id="zoom-in" class="glyphicon glyphicon-star-empty"></span></button>';
+        /**
+         * Gliphicon icons explored include class="glyphicon...
+         *   glyphicon-flag
+         *   glyphicon glyphicon-star
+         *   glyphicon-heart
+         *   glyphicon-ok
+         *   glyphicon-pushpin
+         *   glyphicon-star-empty
+         **/
+        // favoriteButtonHTML = '<button data-booth-number="' + boothData.boothNumber + '" type="button" class="btn btn-flag" data-color-palette="color5">Flag <span id="zoom-in" class="glyphicon glyphicon-flag"></span></button>';
+        favoriteButtonHTML = '<button data-booth-number="' + boothData.boothNumber + '" type="button" class="btn btn-flag btn-primary">Flag <span id="zoom-in" class="glyphicon glyphicon-flag"></span></button>';
 
         if (boothData.logo) {
             // modalImageHTML = ' <div class="modal-image-container"><img class="company-logo" src="' + this.pathToLogos + boothData.logo + '" /></div>';
@@ -95,7 +92,7 @@ Floorplan.prototype.createModal = function (boothData) {
     this.bodyReference.append(this.modals[boothData.boothNumber]);
 
     // Register button event on Favorite button
-    this.registerFavoriteButton((this.modals[boothData.boothNumber]).find('.btn-favorite'));
+    this.registerFavoriteButton((this.modals[boothData.boothNumber]).find('.btn-flag'));
 }; // end createModal()
 
 

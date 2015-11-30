@@ -72,7 +72,8 @@ Floorplan.prototype.getBoothData = function () {
                     email: this.boothXMLElements[i].getAttribute('email'), // currently null
                     id: ('booth-' + thisBoothNumber),
                     // iframeReference: ((this.boothXMLElements[i].getAttribute('iframe')) + '?id=' + thisBoothNumber),
-                    iframeReference: (this.eventDataFilename + '/' + (this.boothXMLElements[i].getAttribute('iframe'))),
+                    // iframeReference: (this.eventDataFilename + '/' + (this.boothXMLElements[i].getAttribute('iframe'))),
+                    iframeReference: (this.eventDataFilename + '/' + (this.boothXMLElements[i].getAttribute('iframe')) + '?id=' + thisBoothNumber),
                     information: this.boothXMLElements[i].getAttribute('desc'),
                     logo: this.boothXMLElements[i].getAttribute('logo'), // currently null
                     organizationDescription: this.boothXMLElements[i].getAttribute('org'),

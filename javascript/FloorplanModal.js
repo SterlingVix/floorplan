@@ -87,8 +87,8 @@ Floorplan.prototype.createModal = function (boothData) {
      *   + '</div>';
      **/
     var modalBodyID = 'modal-body-' + boothData.boothNumber;
-    // var modalBodyHTML = '<div class="modal-body">' + '<iframe id="booth-iframe-' + boothData.boothNumber + '" class="booth-iframe" href="' + boothData.iframeReference + '"></iframe>' + '</div>';
-    var modalBodyHTML = '<div class="modal-body">' + '<iframe id="booth-iframe-' + boothData.boothNumber + '" class="booth-iframe"></iframe>' + '</div>';
+//     var modalBodyHTML = '<div class="modal-body">' + '<iframe id="booth-iframe-' + boothData.boothNumber + '" class="booth-iframe" href="' + boothData.iframeReference + '"></iframe>' + '</div>';
+    var modalBodyHTML = '<div class="modal-body">' + '<iframe id="booth-iframe-' + boothData.boothNumber + '" class="booth-iframe" src="' + boothData.iframeReference + '"></iframe>' + '</div>';
     // var modalBodyHTML = '<div class="modal-body" id="' + modalBodyID + '"></div>';
     
     var modalFooterHTML = '<div class="modal-footer">' + '<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>' + flagButtonHTML + '</div>';
@@ -97,8 +97,7 @@ Floorplan.prototype.createModal = function (boothData) {
 
     // Assign innerHTML to modal element
     modal.html(modalHTML);
-
-    modal.iframeHrefValue = boothData.iframeReference;
+    
     modal.iframeID = '#booth-iframe-' + boothData.boothNumber;
     
     // OBSOLETE?
@@ -118,7 +117,7 @@ Floorplan.prototype.createModal = function (boothData) {
     
     // Find this iframe element now that it's been added to the page
     // and set the href and force a load.
-    $(this.modals[boothData.boothNumber].iframeID).attr('href', boothData.iframeReference);
+//    $(this.modals[boothData.boothNumber].iframeID).attr('href', boothData.iframeReference);
     
     // TODO load this iframe
     // window.setTimeout( (function() {

@@ -87,14 +87,14 @@
             <booth x="180" y="561" w="30" h="45" number="345" org="20 X 30 Booth" desc="Available" tooltip="Click for more information" iframe="booth.aspx" bc="#cbe4ff" fc="#000000" />
             <booth x="224" y="209" w="30" h="60" number="555" org="" desc="" tooltip="Click for more information" iframe="booth.aspx" bc="#ffa4d1" fc="#000000" />
             <!-- Booths that aren't available: -->
-            <booth x="310" y="326" w="75" h="45" number="415" iframe="test.html" org="Air Force Association" desc="Big planes" tooltip="Click for more information" bc="#ffffd2" fc="#000000" />
-            <booth x="180" y="209" w="29" h="88" number="445" iframe="test.html" org="Boeing" desc="laskdhkjasdhgdf " tooltip="Click for more information" bc="#ffa4d1" fc="#000000" />
-            <booth x="222" y="310" w="75" h="60" number="315" iframe="test.html" org="Boeing" desc="Big planes" tooltip="Click for more information" bc="#ffffd2" fc="#000000" />
-            <booth x="134" y="399" w="30" h="45" number="217" iframe="test.html" org="Orbital ATK" desc="Space Ships" tooltip="Click for more information" bc="#ffffd2" fc="#000000" />
-            <booth x="135" y="458" w="90" h="90" number="223" iframe="test.html" org="Northrop Grumman Corporation" desc="Airplanes" tooltip="Click for more information" bc="#ffffd2" fc="#000000" />
-            <booth x="91" y="341" w="45" h="30" number="107" iframe="test.html" org="Raetheon Company" desc="Comne see us" tooltip="Click for more information" bc="#ffffd2" fc="#000000" products="Jets, Airplanes,Blimps" />
-            <booth x="148" y="326" w="60" h="45" number="215" iframe="test.html" org="Pratt and Whitney" desc="Big planes" tooltip="Click for more information" bc="#ffffd2" fc="#000000" products="Jets, airplanes,dirigibles"/>
-            <booth x="179" y="399" w="75" h="45" number="317" iframe="test.html" org="Lockheed Martin" desc="Space Ships" tooltip="Click for more information" bc="#ffffd2" fc="#000000" />
+            <booth x="310" y="326" w="75" h="45" number="415" iframe="booth.aspx" org="Air Force Association" desc="Big planes" tooltip="Click for more information" bc="#ffffd2" fc="#000000" />
+            <booth x="180" y="209" w="29" h="88" number="445" iframe="booth.aspx" org="Boeing" desc="laskdhkjasdhgdf " tooltip="Click for more information" bc="#ffa4d1" fc="#000000" />
+            <booth x="222" y="310" w="75" h="60" number="315" iframe="booth.aspx" org="Boeing" desc="Big planes" tooltip="Click for more information" bc="#ffffd2" fc="#000000" />
+            <booth x="134" y="399" w="30" h="45" number="217" iframe="booth.aspx" org="Orbital ATK" desc="Space Ships" tooltip="Click for more information" bc="#ffffd2" fc="#000000" />
+            <booth x="135" y="458" w="90" h="90" number="223" iframe="booth.aspx" org="Northrop Grumman Corporation" desc="Airplanes" tooltip="Click for more information" bc="#ffffd2" fc="#000000" />
+            <booth x="91" y="341" w="45" h="30" number="107" iframe="booth.aspx" org="Raetheon Company" desc="Comne see us" tooltip="Click for more information" bc="#ffffd2" fc="#000000" products="Jets, Airplanes,Blimps" />
+            <booth x="148" y="326" w="60" h="45" number="215" iframe="booth.aspx" org="Pratt and Whitney" desc="Big planes" tooltip="Click for more information" bc="#ffffd2" fc="#000000" products="Jets, airplanes,dirigibles"/>
+            <booth x="179" y="399" w="75" h="45" number="317" iframe="booth.aspx" org="Lockheed Martin" desc="Space Ships" tooltip="Click for more information" bc="#ffffd2" fc="#000000" />
         </page>
     </floorplan>
 

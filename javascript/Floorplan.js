@@ -29,7 +29,9 @@ var Floorplan = function (floorplanAppOptions) {
     this.aboutContainer = $('#about-page');
     this.contactContainer = $('#contact-page');
     this.exhibitorListContainer = $('#exhibitor-list-container');
+    this.productFilterListContainer = $('#product-filter-list-container');
     this.exhibitorUnorderedListElement = $('#exhibitor-list-main-list');
+    this.productFilterUnorderedListElement = $('#product-filter-list-main-list');
     this.containerMaxWidth = floorplanAppOptions.optionalContainerMaxWidth || '1300px';
     this.containerMaxHeight = floorplanAppOptions.optionalContainerMaxHeight || '700px';
     this.eventName = '';
@@ -41,6 +43,7 @@ var Floorplan = function (floorplanAppOptions) {
     this.navbarBrandButton = $('.navbar-brand');
     this.navbarHomeButton = $('#navbar-button-home');
     this.navbarExhibitorListButton = $('#navbar-button-exhibitor-list');
+    this.navbarProductFilterListButton = $('#navbar-button-product-filter-list');
     this.navbarAboutButton = $('#navbar-button-about');
     this.navbarContactButton = $('#navbar-button-contact');
 
@@ -51,7 +54,8 @@ var Floorplan = function (floorplanAppOptions) {
     this.bodyReference = $('body'); // cache this to avoid frequent DOM parsing (which is expensive).
     this.zoomInElement = $('#zoom-in');
     this.zoomOutElement = $('#zoom-out');
-    this.clearAllButton = $('#clear-all');
+    this.exhibitorClearAllButton = $('#exhibitor-clear-all');
+    this.productFilterClearAllButton = $('#product-filter-clear-all');
 
     /**
      * Application data

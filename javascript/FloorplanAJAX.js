@@ -114,6 +114,10 @@ Floorplan.prototype.getBoothData = function () {
              * then append elements to exhibitorLiElements,
              * then register the highlight function on the element.
              **/
+        
+            // TODO - product filter list here
+        
+        
             this.exhibitorLiElements.length = this.exhibitorSortedNames.length;
             this.exhibitorSortedNames.sort();
 

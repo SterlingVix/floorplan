@@ -121,10 +121,9 @@ Floorplan.prototype.createModal = function (boothData) {
     $(this.modals[boothData.boothNumber].iframeID).attr('href', boothData.iframeReference);
     
     // TODO load this iframe
-    window.setTimeout( (function() {
-        console.log($(this.modals[boothData.boothNumber].iframeID));
-        $(this.modals[boothData.boothNumber].iframeID).load();
-    }).bind(this), 1000);
+    // window.setTimeout( (function() {
+    $(this.modals[boothData.boothNumber].iframeID).load();
+    // }).bind(this), 1000);
 }; // end createModal()
 
 

@@ -34,10 +34,19 @@ Floorplan.prototype.createModal = function (boothData) {
 
     // HTML Strings for specific modal elements
     var modalImageHTML = '';
-    var modalTitleHTML = '<h4 class="modal-title booth-available" id="modal-label-' + boothData.boothNumber + '">Available to reserve (Booth ' + boothData.boothNumber + ')</h4>';
+    
+//    debugger;
+    var modalTitleHTML = '<h4 class="modal-title booth-available" id="modal-label-' + boothData.boothNumber + '">' + boothData.organizationDescription + ' (Booth ' + boothData.boothNumber + ')</h4>';
     var companyInformationHTML = '<p class="company-information available-booth-information">' + this.availableBoothHTML + '</p>';
-    var favoriteButtonHTML = '';
+    var flagButtonHTML = '';
 
+    
+    // If this condition is met, add the flag button to this booth:
+    if (true) {
+        flagButtonHTML = '<button data-booth-number="' + boothData.boothNumber + '" type="button" class="btn btn-flag btn-primary">Flag <span id="zoom-in" class="glyphicon glyphicon-flag"></span></button>';
+    }
+    
+    
     // Update the placeholder strings if the booth is taken
     if (!boothData.isAvailable) {
         /**
@@ -49,8 +58,7 @@ Floorplan.prototype.createModal = function (boothData) {
          *   glyphicon-pushpin
          *   glyphicon-star-empty
          **/
-        // favoriteButtonHTML = '<button data-booth-number="' + boothData.boothNumber + '" type="button" class="btn btn-flag" data-color-palette="color5">Flag <span id="zoom-in" class="glyphicon glyphicon-flag"></span></button>';
-        favoriteButtonHTML = '<button data-booth-number="' + boothData.boothNumber + '" type="button" class="btn btn-flag btn-primary">Flag <span id="zoom-in" class="glyphicon glyphicon-flag"></span></button>';
+        // flagButtonHTML = '<button data-booth-number="' + boothData.boothNumber + '" type="button" class="btn btn-flag" data-color-palette="color5">Flag <span id="zoom-in" class="glyphicon glyphicon-flag"></span></button>';
 
         if (boothData.logo) {
             // modalImageHTML = ' <div class="modal-image-container"><img class="company-logo" src="' + this.pathToLogos + boothData.logo + '" /></div>';
@@ -78,21 +86,45 @@ Floorplan.prototype.createModal = function (boothData) {
      *   + companyInformationHTML
      *   + '</div>';
      **/
-    var modalBodyHTML = '<div class="modal-body">' + '<iframe id="booth-iframe-' + boothData.boothNumber + '" class="booth-iframe" href="' + boothData.iframeReference + '"></iframe>' + '</div>';
-
-    var modalFooterHTML = '<div class="modal-footer">' + '<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>' + favoriteButtonHTML + '</div>';
+    var modalBodyID = 'modal-body-' + boothData.boothNumber;
+    // var modalBodyHTML = '<div class="modal-body">' + '<iframe id="booth-iframe-' + boothData.boothNumber + '" class="booth-iframe" href="' + boothData.iframeReference + '"></iframe>' + '</div>';
+    var modalBodyHTML = '<div class="modal-body">' + '<iframe id="booth-iframe-' + boothData.boothNumber + '" class="booth-iframe"></iframe>' + '</div>';
+    // var modalBodyHTML = '<div class="modal-body" id="' + modalBodyID + '"></div>';
+    
+    var modalFooterHTML = '<div class="modal-footer">' + '<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>' + flagButtonHTML + '</div>';
 
     var modalHTML = '<div class="modal-dialog" role="document">' + '    <div class="modal-content">' + modalHeaderHTML + modalBodyHTML + modalFooterHTML + '    </div>' + '</div>';
 
     // Assign innerHTML to modal element
     modal.html(modalHTML);
 
+    modal.iframeHrefValue = boothData.iframeReference;
+    modal.iframeID = '#booth-iframe-' + boothData.boothNumber;
+    
+    // OBSOLETE?
+    // iframe element to add to modal after modal is rendered.
+    // This is a bit of a hack, and may require an additional "load" statement for the iframe
+    // var modalIframe = $('<iframe id="booth-iframe-' + boothData.boothNumber + '" class="booth-iframe">');
+    // modalIframe.attr('href', boothData.iframeReference);
+    // var modalBody = modal.find( ('#' + modalBodyID) );
+    // modalBody.append(modalIframe);
+    
     // Hash this booth modal to the 'this.modals' object with [[boothNumber]] as the key.
     this.modals[boothData.boothNumber] = modal;
     this.bodyReference.append(this.modals[boothData.boothNumber]);
 
-    // Register button event on Favorite button
-    this.registerFavoriteButton((this.modals[boothData.boothNumber]).find('.btn-flag'));
+    // Register button event on Flag button
+    this.registerFlagButton((this.modals[boothData.boothNumber]).find('.btn-flag'));
+    
+    // Find this iframe element now that it's been added to the page
+    // and set the href and force a load.
+    $(this.modals[boothData.boothNumber].iframeID).attr('href', boothData.iframeReference);
+    
+    // TODO load this iframe
+    window.setTimeout( (function() {
+        console.log($(this.modals[boothData.boothNumber].iframeID));
+        $(this.modals[boothData.boothNumber].iframeID).load();
+    }).bind(this), 1000);
 }; // end createModal()
 
 

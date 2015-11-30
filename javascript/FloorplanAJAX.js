@@ -81,6 +81,11 @@ Floorplan.prototype.getBoothData = function () {
                     tooltip: this.boothXMLElements[i].getAttribute('tooltip'),
                     website: this.boothXMLElements[i].getAttribute('website'), // currently null
                 };
+                
+                // TEMPORARY If this condition is met, add a query to the iframe href:
+                if (false) {
+                    thisBooth.iframeReference += '?id=' + thisBooth.boothNumber;
+                }
 
                 /**
                  * Update 'isAvailable' key based on availability. If

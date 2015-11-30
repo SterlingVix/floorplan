@@ -191,10 +191,10 @@ Floorplan.prototype.registerTooltipAndPopoverEvents = function (boothElement) {
 
 
 /**
- * Register function of "favorite" button in modal
+ * Register function of "flag" button in modal
  **/
-Floorplan.prototype.registerFavoriteButton = function (favoriteButton) {
-    favoriteButton.on('click', (function (event) {
+Floorplan.prototype.registerFlagButton = function (flagButton) {
+    flagButton.on('click', (function (event) {
         // Get booth number for booth to flag
         var boothNumberToFlag = $(event.delegateTarget).attr('data-booth-number');
         boothNumberToFlag = parseInt(boothNumberToFlag);
@@ -215,8 +215,8 @@ Floorplan.prototype.registerFavoriteButton = function (favoriteButton) {
             $(event.delegateTarget).removeClass('active');
             thisFlag.addClass('hidden');
         }        
-    }).bind(this)); // end (click favorite button)
-}; // end registerFavoriteButton()
+    }).bind(this)); // end (click flag button)
+}; // end registerFlagButton()
 
 
 /**
@@ -257,7 +257,7 @@ Floorplan.prototype.registerExhibitorHighlightButton = function (exhibitorElemen
                 this.boothElements[thisBoothNumber].addClass('highlighted');
             }
         } // end if-else (exhibitor elements are highlighted)
-    }).bind(this)); // end (click favorite button)
+    }).bind(this)); // end (click flag button)
 }; // end registerExhibitorHighlightButton()
 
 

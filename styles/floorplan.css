@@ -337,9 +337,10 @@ a.navbar-brand:focus {
     font-size: 1.2em;
 }
 
-#clear-all {
+#exhibitor-clear-all {
     margin: 0em 1em 0em 1.6em;
 }
+
 
 #exhibitor-list-main-list {
     overflow-y: auto;
@@ -363,6 +364,90 @@ a.navbar-brand:focus {
     /* OBSOLETE */
 }
 
+
+
+/**
+ * Product filter drawer styles
+ **/
+/* Product filter list container (as a Bootstrap panel) */
+#product-filter-list-container {
+    z-index: 10;
+    display: inline-block;
+    position: absolute;
+    height: 100%;
+    top: 0;
+    left: 0;
+    border-right: double 2px darkgrey;
+    /* min-width: 10%;*/
+    max-width: 44%;
+    transform: translateX(0%);
+    /* Animations for sliding drawer out. */
+    -webkit-transition: transform 200ms ease-out;
+    -moz-transition: transform 200ms ease-out;
+    -o-transition: transform 200ms ease-out;
+    transition: transform 200ms ease-out;
+}
+
+#product-filter-list-container.closed {
+    transform: translateX(-100%);
+    /* Animations for sliding drawer out. */
+    -webkit-transition: transform 200ms ease-out;
+    -moz-transition: transform 200ms ease-out;
+    -o-transition: transform 200ms ease-out;
+    transition: transform 200ms ease-out;
+}
+
+#product-filter-list-container .panel-heading {
+    /* padding: 1.2em;*/
+    text-align: left;
+    color: white;
+}
+
+.panel-heading .panel-heading-item {
+    display: inline-block;
+    padding: 0px!important;
+    margin: 0px!important;
+    width: 49%;
+    overflow: hidden;
+}
+
+.panel-heading .panel-heading-item h3 {
+    line-height: 2em;
+    font-size: 1.2em;
+}
+
+#product-filter-clear-all {
+    margin: 0em 1em 0em 1.6em;
+}
+
+#product-filter-list-main-list {
+    overflow-y: auto;
+    overflow-x: hidden;
+    display: inline-block;
+}
+
+.product-filter-li {
+    width: 100%;
+    display: inline;
+    display: block;
+    margin: 0.25em auto;
+}
+
+.product-filter-li[data-color-palette="color2"]:hover {
+    color: #e8e8e8;
+}
+
+.product-filter-li.longest-name {
+    /* OBSOLETE */
+}
+
+.booth-faded {
+    opacity: 0.3;
+}
+.booth-faded * {
+    opacity: 0.3
+}
+
 /**
 * Booth highlighting styles
 **/
@@ -373,12 +458,12 @@ a.navbar-brand:focus {
 }
 
 /*
-li.exhibitor-li[data-highlighted="true"] {
+li.product-filter-li[data-highlighted="true"] {
     background-color: yellow;
 }
 */
 
-li.exhibitor-li[data-highlighted="false"] {
+li.product-filter-li[data-highlighted="false"] {
 }
 
 

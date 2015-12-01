@@ -72,7 +72,8 @@ Floorplan.prototype.getBoothData = function () {
                     email: this.boothXMLElements[i].getAttribute('email'), // currently null
                     id: ('booth-' + thisBoothNumber),
                     // iframeReference: ((this.boothXMLElements[i].getAttribute('iframe')) + '?id=' + thisBoothNumber),
-                    iframeReference: (this.eventDataFilename + '/' + (this.boothXMLElements[i].getAttribute('iframe'))),
+                    // iframeReference: (this.eventDataFilename + '/' + (this.boothXMLElements[i].getAttribute('iframe'))),
+                    iframeReference: (this.eventDataFilename + '/' + (this.boothXMLElements[i].getAttribute('iframe')) + '?id=' + thisBoothNumber),
                     information: this.boothXMLElements[i].getAttribute('desc'),
                     logo: this.boothXMLElements[i].getAttribute('logo'), // currently null
                     organizationDescription: this.boothXMLElements[i].getAttribute('org'),
@@ -81,6 +82,11 @@ Floorplan.prototype.getBoothData = function () {
                     tooltip: this.boothXMLElements[i].getAttribute('tooltip'),
                     website: this.boothXMLElements[i].getAttribute('website'), // currently null
                 };
+                
+                // TEMPORARY If this condition is met, add a query to the iframe href:
+                if (false) {
+                    thisBooth.iframeReference += '?id=' + thisBooth.boothNumber;
+                }
 
                 /**
                  * Update 'isAvailable' key based on availability. If
@@ -109,6 +115,10 @@ Floorplan.prototype.getBoothData = function () {
              * then append elements to exhibitorLiElements,
              * then register the highlight function on the element.
              **/
+        
+            // TODO - product filter list here
+        
+        
             this.exhibitorLiElements.length = this.exhibitorSortedNames.length;
             this.exhibitorSortedNames.sort();
 

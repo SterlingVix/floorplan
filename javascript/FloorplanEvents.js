@@ -32,20 +32,18 @@ Floorplan.prototype.registerFloorplanEvents = function () {
  *   the 'Home' button function.
  **/
 Floorplan.prototype.registerNavButtons = function () {
-    // UPDATE: This used tp defer the main button to the 'Home' button function.
-    // Now it closes the exhibitorList drawer
+    // When clicking the main event button, close all drawers
     this.navbarBrandButton.on('click', (function (event) {
-//        this.navbarHomeButton.click();     
         if (!!this.navbarExhibitorListButton[0].isActiveFlag === true) {
             this.navbarExhibitorListButton.click();
         }
+        if (!!this.navbarProductFilterListButton[0].isActiveFlag === true) {
+            this.navbarProductFilterListButton.click();
+        }
     }).bind(this)); // and addEventListener(click navbar main brand button)
 
-    this.navbarHomeButton.on('click', (function (event) {
-        this.updateActiveNavbarButton(event.delegateTarget);
-        this.appContainer.removeClass('hidden');
-    }).bind(this)); // and addEventListener(click navbar 'home' button)
-
+    
+    // Exhibitor drawer logic
     this.navbarExhibitorListButton.on('click', (function (event) {
         // Flip the active state of this element
         if (!event.delegateTarget.isActiveFlag) {            
@@ -53,26 +51,51 @@ Floorplan.prototype.registerNavButtons = function () {
             // isActiveFlag is false or doesn't exist, so activate
             event.delegateTarget.isActiveFlag = true;
             $(event.delegateTarget).addClass('active');
-//            this.exhibitorListContainer.removeClass('hidden');
+            // this.exhibitorListContainer.removeClass('hidden');
             this.exhibitorListContainer.removeClass('closed');
         } else {
             // isActiveFlag is true, so deactivate
             event.delegateTarget.isActiveFlag = false;
             $(event.delegateTarget).removeClass('active');
-//            this.exhibitorListContainer.addClass('hidden');
+            // this.exhibitorListContainer.addClass('hidden');
             this.exhibitorListContainer.addClass('closed');
         }
-    }).bind(this)); // and addEventListener(click navbar 'about' button)
-
-    this.navbarAboutButton.on('click', (function (event) {
-        this.updateActiveNavbarButton(event.delegateTarget);
-        this.aboutContainer.removeClass('hidden');
-    }).bind(this)); // and addEventListener(click navbar 'about' button)
-
-    this.navbarContactButton.on('click', (function (event) {
-        this.updateActiveNavbarButton(event.delegateTarget);
-        this.contactContainer.removeClass('hidden');
-    }).bind(this)); // and addEventListener(click navbar 'contact' button)
+    }).bind(this)); // end addEventListener(click navbar 'Exhibitor' button)
+    
+    
+    // Product filter drawer logic
+    this.navbarProductFilterListButton.on('click', (function (event) {
+        // Flip the active state of this element
+        if (!event.delegateTarget.isActiveFlag) {
+            
+            // isActiveFlag is false or doesn't exist, so activate
+            event.delegateTarget.isActiveFlag = true;
+            $(event.delegateTarget).addClass('active');
+            this.productFilterListContainer.removeClass('closed');
+        } else {
+            // isActiveFlag is true, so deactivate
+            event.delegateTarget.isActiveFlag = false;
+            $(event.delegateTarget).removeClass('active');
+            this.productFilterListContainer.addClass('closed');
+        }
+    }).bind(this)); // end addEventListener(click navbar 'Products' button)
+    
+    
+    // OLD and bosolete code, but leaving in case we want to redo pages.
+    // this.navbarHomeButton.on('click', (function (event) {
+    //     this.updateActiveNavbarButton(event.delegateTarget);
+    //     this.appContainer.removeClass('hidden');
+    // }).bind(this)); // and addEventListener(click navbar 'home' button)
+    //
+    // this.navbarAboutButton.on('click', (function (event) {
+    //     this.updateActiveNavbarButton(event.delegateTarget);
+    //     this.aboutContainer.removeClass('hidden');
+    // }).bind(this)); // and addEventListener(click navbar 'about' button)
+    //
+    // this.navbarContactButton.on('click', (function (event) {
+    //     this.updateActiveNavbarButton(event.delegateTarget);
+    //     this.contactContainer.removeClass('hidden');
+    // }).bind(this)); // and addEventListener(click navbar 'contact' button)
 }; // end registerNavButtons
 
 
@@ -83,7 +106,7 @@ Floorplan.prototype.updateActiveNavbarButton = function (clickedButton) {
     // Remove the class 'active' from all buttons
     this.navbarBrandButton.removeClass('active');
     this.navbarHomeButton.removeClass('active');
-    //    this.navbarExhibitorListButton.removeClass('active');
+    // this.navbarExhibitorListButton.removeClass('active');
     this.navbarAboutButton.removeClass('active');
     this.navbarContactButton.removeClass('active');
 
@@ -191,10 +214,10 @@ Floorplan.prototype.registerTooltipAndPopoverEvents = function (boothElement) {
 
 
 /**
- * Register function of "favorite" button in modal
+ * Register function of "flag" button in modal
  **/
-Floorplan.prototype.registerFavoriteButton = function (favoriteButton) {
-    favoriteButton.on('click', (function (event) {
+Floorplan.prototype.registerFlagButton = function (flagButton) {
+    flagButton.on('click', (function (event) {
         // Get booth number for booth to flag
         var boothNumberToFlag = $(event.delegateTarget).attr('data-booth-number');
         boothNumberToFlag = parseInt(boothNumberToFlag);
@@ -215,8 +238,8 @@ Floorplan.prototype.registerFavoriteButton = function (favoriteButton) {
             $(event.delegateTarget).removeClass('active');
             thisFlag.addClass('hidden');
         }        
-    }).bind(this)); // end (click favorite button)
-}; // end registerFavoriteButton()
+    }).bind(this)); // end (click flag button)
+}; // end registerFlagButton()
 
 
 /**
@@ -257,17 +280,68 @@ Floorplan.prototype.registerExhibitorHighlightButton = function (exhibitorElemen
                 this.boothElements[thisBoothNumber].addClass('highlighted');
             }
         } // end if-else (exhibitor elements are highlighted)
-    }).bind(this)); // end (click favorite button)
+    }).bind(this)); // end (click flag button)
 }; // end registerExhibitorHighlightButton()
 
 
+
+
+
 /**
- * Register function of "Clear All" button in exhibitors list
+ * Register highlighting function of clicking product from list
+ **/
+Floorplan.prototype.registerProductFilterHighlightButton = function (productFilterElement) {
+    productFilterElement.on('click', (function (event) {
+
+        
+        // TODO - update with correct logic
+        
+        
+        // Get booth number from element
+        var boothNumber = productFilterElement.attr('data-booth-number');
+
+        // Convert boothNumber to array to handle multiple booths with same company name
+        var boothNumberArray = boothNumber.split(',');
+
+        // Get highlighted value from element
+        var isHighlighted = productFilterElement.attr('data-highlighted');
+        
+        // If this element is highlighted, 
+        if (isHighlighted === 'true') {
+            productFilterElement.attr('data-highlighted', 'false');
+            productFilterElement.attr('data-color-palette', 'color3');
+            productFilterElement.removeClass('highlighted');
+
+            // Un-highlight booths for all booth numbers in the array
+            for (var i = 0; i < boothNumberArray.length; i++) {
+                var thisBoothNumber = parseInt(boothNumberArray[i]);
+                this.boothElements[thisBoothNumber].removeClass('highlighted');
+            }
+        } else {
+            // element is not highlighted
+            productFilterElement.attr('data-highlighted', 'true');
+            productFilterElement.attr('data-color-palette', 'color2');
+            productFilterElement.addClass('highlighted');
+
+            // Highlight booths for all booth numbers in the array
+            for (var i = 0; i < boothNumberArray.length; i++) {
+                var thisBoothNumber = parseInt(boothNumberArray[i]);
+                this.boothElements[thisBoothNumber].addClass('highlighted');
+            }
+        } // end if-else (product elements are highlighted)
+    }).bind(this)); // end (click flag button)
+}; // end registerProductFilterHighlightButton()
+
+
+
+
+
+/**
+ * Register function of "Clear All" buttons in drawers
  **/
 Floorplan.prototype.registerClearAllButton = function () {
-
-    this.clearAllButton.on('click', (function (event) {
-        // console.log('clicked clear all button at', event.delegateTarget);
+    // Exhibitor drawer clear all button
+    this.exhibitorClearAllButton.on('click', (function (event) {
         var highlightedElements = $('.highlighted');
 
         for (var i = 0; i < highlightedElements.length; i++) {
@@ -277,6 +351,19 @@ Floorplan.prototype.registerClearAllButton = function () {
                 $(highlightedElements[i]).attr('data-color-palette', 'color3');
             }
         } // end for (all highlighted elements)
+    }).bind(this)); // end (click clear all button)
 
+    
+    // Product filter drawer clear all button
+    this.productFilterClearAllButton.on('click', (function (event) {
+        var fadedElements = $('.booth-faded');
+
+        for (var i = 0; i < fadedElements.length; i++) {
+            $(fadedElements[i]).removeClass('booth-faded');
+            if ( ($(fadedElements[i]).attr('data-booth-faded')) === 'true') {
+                $(fadedElements[i]).attr('data-booth-faded', 'false');
+                $(fadedElements[i]).attr('data-color-palette', 'color3');
+            }
+        } // end for (all booth-faded elements)
     }).bind(this)); // end (click clear all button)
 }; // end registerClearAllButton()

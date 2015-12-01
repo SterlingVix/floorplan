@@ -29,9 +29,9 @@ var Floorplan = function (floorplanAppOptions) {
     this.aboutContainer = $('#about-page');
     this.contactContainer = $('#contact-page');
     this.exhibitorListContainer = $('#exhibitor-list-container');
-    this.productFilterListContainer = $('#product-filter-list-container');
+    this.productListContainer = $('#product-list-container');
     this.exhibitorUnorderedListElement = $('#exhibitor-list-main-list');
-    this.productFilterUnorderedListElement = $('#product-filter-list-main-list');
+    this.productUnorderedListElement = $('#product-list-main-list');
     this.containerMaxWidth = floorplanAppOptions.optionalContainerMaxWidth || '1300px';
     this.containerMaxHeight = floorplanAppOptions.optionalContainerMaxHeight || '700px';
     this.eventName = '';
@@ -43,7 +43,7 @@ var Floorplan = function (floorplanAppOptions) {
     this.navbarBrandButton = $('.navbar-brand');
     this.navbarHomeButton = $('#navbar-button-home');
     this.navbarExhibitorListButton = $('#navbar-button-exhibitor-list');
-    this.navbarProductFilterListButton = $('#navbar-button-product-filter-list');
+    this.navbarProductListButton = $('#navbar-button-product-list');
     this.navbarAboutButton = $('#navbar-button-about');
     this.navbarContactButton = $('#navbar-button-contact');
 
@@ -55,7 +55,7 @@ var Floorplan = function (floorplanAppOptions) {
     this.zoomInElement = $('#zoom-in');
     this.zoomOutElement = $('#zoom-out');
     this.exhibitorClearAllButton = $('#exhibitor-clear-all');
-    this.productFilterClearAllButton = $('#product-filter-clear-all');
+    this.productClearAllButton = $('#product-clear-all');
 
     /**
      * Application data
@@ -74,8 +74,11 @@ var Floorplan = function (floorplanAppOptions) {
     this.mouseY = 0;
     this.boothElements = {};
     this.exhibitorLiElements = {};
+    this.productLiElements = {};
     this.exhibitorSortedNames = [];
+    this.productSortedNames = [];
     this.productsMap = {}; // object of arrays of booths by product key
+    this.productsFilteredStack = [];
 
     this.modals = {};
 
@@ -259,14 +262,8 @@ Floorplan.prototype.createBoothElement = function (thisBoothData) {
         }
     }
 
-
-    // Add a 'flagged' icon (hidden by default) to this element
-    //    var flagElemenet = $('<span class="hidden booth-flag glyphicon glyphicon-heart"></span>');
-    //    var flagElemenet = $('<span class="hidden booth-flag glyphicon glyphicon glyphicon-star"></span>');
-    //    var flagElemenet = $('<span class="hidden booth-flag glyphicon glyphicon-star-empty"></span>');
+    // Add a 'flagged' icon (hidden by default) to this element || glyphicon-heart, glyphicon glyphicon-star, glyphicon-star-empty, glyphicon-pushpin, glyphicon-ok
     var flagElemenet = $('<span class="hidden booth-flag glyphicon glyphicon-flag"></span>');
-    //    var flagElemenet = $('<span class="hidden booth-flag glyphicon glyphicon-pushpin"></span>');
-    //    var flagElemenet = $('<span class="hidden booth-flag glyphicon glyphicon-ok"></span>');
     boothElement.append(flagElemenet);
 
     // Instantiate tooltip and popover events on this element
@@ -277,11 +274,6 @@ Floorplan.prototype.createBoothElement = function (thisBoothData) {
 
         // Flag duplicate booth names and handle multiple-booth highlighting
         if (!!this.exhibitorLiElements[thisBoothData.organizationDescription]) {
-            // console.warn('WARNING:', thisBoothData.organizationDescription, 'is already a key.');
-            // console.log('  existing booth is', this.exhibitorLiElements[thisBoothData.organizationDescription]);
-            // console.log('  this booth is', thisBoothData);
-            // console.log('Adding another data-booth-number value.');
-
             var existingDataBoothValue = this.exhibitorLiElements[thisBoothData.organizationDescription].attr('data-booth-number');
             existingDataBoothValue += ',';
             existingDataBoothValue += thisBoothData.boothNumber;
@@ -289,12 +281,9 @@ Floorplan.prototype.createBoothElement = function (thisBoothData) {
             this.exhibitorLiElements[thisBoothData.organizationDescription].attr('data-booth-number', existingDataBoothValue);
         } else {
             // Create new exhibitorLiElement
-            this.exhibitorLiElements[thisBoothData.organizationDescription] = $('<li type="button" class="btn btn-clear exhibitor-li">');
-            // thisBooth.exhibitorListCompanyNameElement = $('<button type="button" class="btn btn-clear exhibitor-li">');
+            var exhibitorElementString = '<li type="button" class="btn btn-clear exhibitor-li" data-booth-number="' + thisBoothData.boothNumber + '" data-highlighted="false" data-color-palette="color3">'
+            this.exhibitorLiElements[thisBoothData.organizationDescription] = $(exhibitorElementString);
             this.exhibitorLiElements[thisBoothData.organizationDescription].text(thisBoothData.organizationDescription);
-            this.exhibitorLiElements[thisBoothData.organizationDescription].attr('data-booth-number', thisBoothData.boothNumber);
-            this.exhibitorLiElements[thisBoothData.organizationDescription].attr('data-highlighted', 'false');
-            this.exhibitorLiElements[thisBoothData.organizationDescription].attr('data-color-palette', 'color3');
 
             // Push exhibitor name onto temporary array for later sorting and appending elements.
             this.exhibitorSortedNames.push(thisBoothData.organizationDescription);

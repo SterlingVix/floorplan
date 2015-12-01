@@ -44,7 +44,8 @@
                     <ul class="nav navbar-nav">
                         <!-- <li id="navbar-button-home" class="nav bar-button active"><a href="#">Home</a></li>-->
                         <li id="navbar-button-exhibitor-list" class="navbar-button"><a>Exhibitors</a></li>
-                        <li id="navbar-button-product-filter-list" class="navbar-button" style="display: none!important;"><a>Products</a></li>
+                        <li id="navbar-button-product-list" class="navbar-button"><a>Products</a></li>
+<!--                        <li id="navbar-button-product-list" class="navbar-button" style="display: none!important;"><a>Products</a></li>-->
                         <!-- <li id="navbar-button-about" class="navbar-button"><a href="#about">About</a></li>-->
                         <!-- <li id="navbar-button-contact" class="navbar-button"><a href="#contact">Contact</a></li>-->
                     </ul>
@@ -64,7 +65,6 @@
                         <h3 class="panel-title">Exhibitors:</h3>
                     </div>
                     <div class="panel-heading-item">
-                        <!-- <button class="btn" type="button" id="exhibitor-clear-all" data-color-palette="color3">Clear All</button>-->
                         <button class="btn btn-default" type="button" id="exhibitor-clear-all">Clear All</button>
                     </div>
                 </div>
@@ -72,18 +72,17 @@
             </div>
 
             <!-- Initially-hidden product filter list -->
-            <div id="product-filter-list-container" class="closed panel product-filter-list-container">
+            <div id="product-list-container" class="closed panel product-list-container">
 
                 <div class="panel-heading" data-color-palette="color5">
                     <div class="panel-heading-item">
                         <h3 class="panel-title">Products:</h3>
                     </div>
                     <div class="panel-heading-item">
-                        <!-- <button class="btn" type="button" id="product-filter-clear-all" data-color-palette="color3">Clear All</button>-->
-                        <button class="btn btn-default" type="button" id="product-filter-clear-all">Clear All</button>
+                        <button class="btn btn-default" type="button" id="product-clear-all">Clear All</button>
                     </div>
                 </div>
-                <ul id="product-filter-list-main-list" class="panel-body"></ul>
+                <ul id="product-list-main-list" class="panel-body"></ul>
             </div>
 
             <div id="background-image" class="invisible"></div>

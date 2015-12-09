@@ -28,6 +28,12 @@
 
 <body data-color-palette="color1">
     <div class="body-container">
+        <!-- Initially-hidden bad browser alert -->
+        <div id="browser-alert">
+            <h3>You appear to be using an old or unsupported browser.</h3>
+            <h4>Please download and use a modern, secure browser. We recommend the latest version of <a href="https://www.google.com/chrome/browser/">Chrome</a> or <a href="https://www.mozilla.org/firefox/new/">Firefox</a>.</h4>
+        </div>
+        
         <!-- Navigation -->
         <nav class="navbar navbar-inverse navbar-fixed-top" data-color-palette="color3">
             <div class="container">
@@ -120,6 +126,7 @@
     <!--    <script src="https://maxcdn.bootstrapcdn.com/js/ie10-viewport-bug-workaround.js"></script>-->
     <script src="lib/ie10-viewport-bug-workaround.js"></script>
     <!-- Local Scripts -->
+    <script src="javascript/DetectBrowser.js"></script>
     <script src="javascript/Floorplan.js"></script>
     <script src="javascript/FloorplanEvents.js"></script>
     <script src="javascript/FloorplanAJAX.js"></script>

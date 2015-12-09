@@ -24,6 +24,25 @@ body {
     padding-top: 0px;
 }
 
+/* Bad browser alert */
+#browser-alert {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: red;
+    color: white;
+    font-size: 2em;
+    min-height: 4em;
+    text-align: center;
+    z-index: 10000;
+    padding: 1em;
+}
+
+#browser-alert.show {
+    display: block!important;
+}
 
 /*50 + 20*/
 

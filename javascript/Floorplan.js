@@ -50,6 +50,7 @@ var Floorplan = function (floorplanAppOptions) {
     /**
      * Interface Elements
      **/
+    this.badBrowserWarningElement = $('#browser-alert');
     this.backgroundImageElement = $('#background-image');
     this.bodyReference = $('body'); // cache this to avoid frequent DOM parsing (which is expensive).
     this.zoomInElement = $('#zoom-in');
@@ -81,18 +82,24 @@ var Floorplan = function (floorplanAppOptions) {
     this.productsFilteredStack = [];
 
     this.modals = {};
+    
+    // Sniff the User Agent and reject deprecated browsers
+    this.detectBrowser = new window.DetectBrowser();
+    if (this.detectBrowser.isValidBrowser()) {
+        // Get the eventDataFilename from either the floorplanAppOptions parameter or the URL
+        this.getEventDataFilename(floorplanAppOptions);
 
-    // Get the eventDataFilename from either the floorplanAppOptions parameter or the URL
-    this.getEventDataFilename(floorplanAppOptions);
+        // Set custom page styles if set during instantiation.
+        this.setPageStyles();
 
-    // Set custom page styles if set during instantiation.
-    this.setPageStyles();
+        // Create 'available booth' content
+        this.createAvailableBoothContent();
 
-    // Create 'available booth' content
-    this.createAvailableBoothContent();
-
-    // Get booth data from server - function is in FloorplanAJAX.js
-    this.getBoothData();
+        // Get booth data from server - function is in FloorplanAJAX.js
+        this.getBoothData();
+    } else {
+        this.badBrowserWarningElement.addClass('show');
+    }
 }; // end Floorplan()
 
 

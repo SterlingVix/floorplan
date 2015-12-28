@@ -124,7 +124,7 @@ Floorplan.prototype.getBoothData = function () {
                 this.productSortedNames.push(key);
                 
                 // Create new productLiElements
-                this.productLiElements[key] = $('<li type="button" class="btn btn-clear product-li" data-product-highlighted="false" data-color-palette="color3">');
+                this.productLiElements[key] = $('<li type="button" class="btn btn-clear product-li" data-highlighted-product="false" data-color-palette="color3">');
                 this.productLiElements[key].text(key);
             }
 
@@ -154,7 +154,7 @@ Floorplan.prototype.getBoothData = function () {
         
             for (var i = 0; i < this.productSortedNames.length; i++) {   
                 this.productUnorderedListElement.append(this.productLiElements[this.productSortedNames[i]]);
-                this.registerProductHighlightButton((this.productLiElements[this.productSortedNames[i]]));
+                this.registerProductFilterButton((this.productLiElements[this.productSortedNames[i]]));
             }; // end for (productSortedNames)
         
         }).bind(this))

@@ -314,7 +314,7 @@ Floorplan.prototype.createBoothElement = function (thisBoothData) {
             this.exhibitorLiElements[thisBoothData.organizationDescription].attr('data-booth-number', existingDataBoothValue);
         } else {
             // Create new exhibitorLiElement
-            var exhibitorElementString = '<li type="button" class="btn btn-clear exhibitor-li" data-booth-number="' + thisBoothData.boothNumber + '" data-highlighted="false" data-color-palette="color3">'
+            var exhibitorElementString = '<li type="button" class="btn btn-clear exhibitor-li" data-booth-number="' + thisBoothData.boothNumber + '" data-highlighted-exhibitor="false" data-color-palette="color3">'
             this.exhibitorLiElements[thisBoothData.organizationDescription] = $(exhibitorElementString);
             this.exhibitorLiElements[thisBoothData.organizationDescription].text(thisBoothData.organizationDescription);
 

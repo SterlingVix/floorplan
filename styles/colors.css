@@ -120,3 +120,38 @@ a[data-color-palette="color5"]:hover {
 }
 
 
+/**
+ * Color override for draft pages:
+ **/
+
+[data-color-palette="draft"] {
+    background-image: -webkit-linear-gradient(top,#e32f1d 0,#d33522 100%); 
+    background-image:      -o-linear-gradient(top,#e32f1d 0,#d33522 100%);
+    background-image:        -webkit-gradient(linear,left top,left bottom,from(#e32f1d),to(#d33522)); 
+    background-image:         linear-gradient(to bottom,#e32f1d 0,#d33522 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffe32f1d', endColorstr='#ffd33522', GradientType=0);
+    filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+    background-repeat: repeat-x;
+    color: white;
+}
+
+/*
+[data-color-palette="draft"]:after {
+    content: "DRAFT";
+    font-size: 2em;
+    text-align: center;
+    position: relative;
+    top: 1em;
+    left: 50%;
+}
+*/
+
+
+[data-color-palette="draft"] span.draft {
+    font-size: 2em;
+    text-align: center;
+/*    position: relative;*/
+    display: block;
+    margin: 0em auto;
+    padding: 0.2em 0em 0em 0em;
+}

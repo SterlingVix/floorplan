@@ -24,7 +24,6 @@ var Floorplan = function (floorplanAppOptions) {
     //TEMP
     window.my = this;
 
-
     this.appContainer = $('.app-container');
     this.aboutContainer = $('#about-page');
     this.contactContainer = $('#contact-page');
@@ -40,6 +39,8 @@ var Floorplan = function (floorplanAppOptions) {
     /**
      * Nav bar elements
      **/
+    this.navElement = $('nav.navbar.navbar-inverse.navbar-fixed-top');
+    this.navbarInnerNavbarElement = $('#navbar');
     this.navbarBrandButton = $('.navbar-brand');
     this.navbarHomeButton = $('#navbar-button-home');
     this.navbarExhibitorListButton = $('#navbar-button-exhibitor-list');
@@ -50,6 +51,8 @@ var Floorplan = function (floorplanAppOptions) {
     /**
      * Interface Elements
      **/
+    this.footerElement = $('footer.footer');
+    this.footerText = $('footer #footer-text');
     this.badBrowserWarningElement = $('#browser-alert');
     this.backgroundImageElement = $('#background-image');
     this.bodyReference = $('body'); // cache this to avoid frequent DOM parsing (which is expensive).
@@ -111,8 +114,17 @@ Floorplan.prototype.getEventDataFilename = function (floorplanAppOptions) {
         this.eventDataFilename = floorplanAppOptions.eventDataFilename;
     } else {
         var thisURL = document.URL.toString();
+        this.urlLength = thisURL.length;
+        var lowercaseURL = thisURL.toLowerCase();
         var hashLocation = (thisURL.search(new RegExp('#'))) + 1;
-        this.eventDataFilename = (thisURL.substring(hashLocation, thisURL.length));
+        var draftLocation = (lowercaseURL.search(new RegExp('-draft'))) + 1;
+        
+        // if the URL contains '-draft', set this page to preview mode
+        if (!!draftLocation) {
+            this.setPreviewMode();
+        }
+        
+        this.eventDataFilename = (thisURL.substring(hashLocation, this.urlLength));
 
         // Update HOME and eventButton hrefs. Use innerHTML for Home button.
         var homeAnchor = this.navbarHomeButton.find('a');
@@ -129,6 +141,20 @@ Floorplan.prototype.getEventDataFilename = function (floorplanAppOptions) {
 Floorplan.prototype.setPageStyles = function () {
     $('head').append($('<style>.booth { font-size: ' + this.boothFontSize + '; }</style>'));
 }; // end setPageStyles()
+
+
+/**
+ * Indicate to the user that this is a draft page
+ **/
+Floorplan.prototype.setPreviewMode = function () {
+    this.urlLength -= 6;
+    this.footerElement[0].dataset.colorPalette = 'draft';
+    this.navElement[0].dataset.colorPalette = 'draft';
+    
+    // Add 'DRAFT' text to the header
+    var draftSpan = $('<span class="draft">DRAFT</span>');
+    this.navbarInnerNavbarElement.append((draftSpan.clone()));
+}; // end setPreviewStyles()
 
 
 /**

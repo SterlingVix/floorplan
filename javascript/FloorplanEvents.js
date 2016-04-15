@@ -34,69 +34,64 @@ Floorplan.prototype.registerFloorplanEvents = function () {
 Floorplan.prototype.registerNavButtons = function () {
     // When clicking the main event button, close all drawers
     this.navbarBrandButton.on('click', (function (event) {
-        if (!!this.navbarExhibitorListButton[0].isActiveFlag === true) {
-            this.navbarExhibitorListButton.click();
-        }
-        if (!!this.navbarProductFilterListButton[0].isActiveFlag === true) {
-            this.navbarProductFilterListButton.click();
-        }
+        event.preventDefault();
+        this.closeDrawer(this.navbarProductListButton, this.productListContainer);
+        this.closeDrawer(this.navbarExhibitorListButton, this.exhibitorListContainer);
     }).bind(this)); // and addEventListener(click navbar main brand button)
 
-    
+
     // Exhibitor drawer logic
     this.navbarExhibitorListButton.on('click', (function (event) {
-        // Flip the active state of this element
-        if (!event.delegateTarget.isActiveFlag) {            
-            
-            // isActiveFlag is false or doesn't exist, so activate
-            event.delegateTarget.isActiveFlag = true;
-            $(event.delegateTarget).addClass('active');
-            // this.exhibitorListContainer.removeClass('hidden');
-            this.exhibitorListContainer.removeClass('closed');
-        } else {
-            // isActiveFlag is true, so deactivate
-            event.delegateTarget.isActiveFlag = false;
-            $(event.delegateTarget).removeClass('active');
-            // this.exhibitorListContainer.addClass('hidden');
-            this.exhibitorListContainer.addClass('closed');
-        }
-    }).bind(this)); // end addEventListener(click navbar 'Exhibitor' button)
-    
-    
-    // Product filter drawer logic
-    this.navbarProductFilterListButton.on('click', (function (event) {
+        event.preventDefault();
+
         // Flip the active state of this element
         if (!event.delegateTarget.isActiveFlag) {
+            this.openDrawer($(event.delegateTarget), this.exhibitorListContainer);
             
-            // isActiveFlag is false or doesn't exist, so activate
-            event.delegateTarget.isActiveFlag = true;
-            $(event.delegateTarget).addClass('active');
-            this.productFilterListContainer.removeClass('closed');
+            if (!this.navbarProductListButton.isActiveFlag) {
+                this.closeDrawer(this.navbarProductListButton, this.productListContainer);
+            }
         } else {
-            // isActiveFlag is true, so deactivate
-            event.delegateTarget.isActiveFlag = false;
-            $(event.delegateTarget).removeClass('active');
-            this.productFilterListContainer.addClass('closed');
+            this.closeDrawer($(event.delegateTarget), this.exhibitorListContainer);
+        }
+    }).bind(this)); // end addEventListener(click navbar 'Exhibitor' button)
+
+
+    // Product filter drawer logic
+    this.navbarProductListButton.on('click', (function (event) {
+        event.preventDefault();
+
+        // Flip the active state of this element
+        if (!event.delegateTarget.isActiveFlag) {
+            if (!this.navbarExhibitorListButton.isActiveFlag) {
+                this.closeDrawer(this.navbarExhibitorListButton, this.exhibitorListContainer);
+            }
+            
+            this.openDrawer($(event.delegateTarget), this.productListContainer);
+        } else {
+            this.closeDrawer($(event.delegateTarget), this.productListContainer);
         }
     }).bind(this)); // end addEventListener(click navbar 'Products' button)
-    
-    
-    // OLD and bosolete code, but leaving in case we want to redo pages.
-    // this.navbarHomeButton.on('click', (function (event) {
-    //     this.updateActiveNavbarButton(event.delegateTarget);
-    //     this.appContainer.removeClass('hidden');
-    // }).bind(this)); // and addEventListener(click navbar 'home' button)
-    //
-    // this.navbarAboutButton.on('click', (function (event) {
-    //     this.updateActiveNavbarButton(event.delegateTarget);
-    //     this.aboutContainer.removeClass('hidden');
-    // }).bind(this)); // and addEventListener(click navbar 'about' button)
-    //
-    // this.navbarContactButton.on('click', (function (event) {
-    //     this.updateActiveNavbarButton(event.delegateTarget);
-    //     this.contactContainer.removeClass('hidden');
-    // }).bind(this)); // and addEventListener(click navbar 'contact' button)
 }; // end registerNavButtons
+
+
+/**
+ * Drawer opening and closing logic.
+ * clickedButton MUST be a jQuery object
+ **/
+Floorplan.prototype.openDrawer = function (clickedButton, drawerElement) {
+    clickedButton[0].isActiveFlag = true;
+    clickedButton.addClass('active');
+    clickedButton.attr('data-color-palette', 'color4');
+    drawerElement.removeClass('closed');
+}; // end openDrawer()
+
+Floorplan.prototype.closeDrawer = function (clickedButton, drawerElement) {
+    clickedButton[0].isActiveFlag = false;
+    clickedButton.removeClass('active');
+    clickedButton.attr('data-color-palette', '');
+    drawerElement.addClass('closed');
+}; // end closeDrawer()
 
 
 /**
@@ -221,13 +216,13 @@ Floorplan.prototype.registerFlagButton = function (flagButton) {
         // Get booth number for booth to flag
         var boothNumberToFlag = $(event.delegateTarget).attr('data-booth-number');
         boothNumberToFlag = parseInt(boothNumberToFlag);
-        
+
         // Get reference to booth flag span element
         var thisFlag = this.boothElements[boothNumberToFlag];
         thisFlag = thisFlag.find('.booth-flag');
-        
+
         // Flip the active state of this element
-        if (!event.delegateTarget.isActiveFlag) {            
+        if (!event.delegateTarget.isActiveFlag) {
             // isActiveFlag is false or doesn't exist, so activate
             event.delegateTarget.isActiveFlag = true;
             $(event.delegateTarget).addClass('active');
@@ -237,7 +232,7 @@ Floorplan.prototype.registerFlagButton = function (flagButton) {
             event.delegateTarget.isActiveFlag = false;
             $(event.delegateTarget).removeClass('active');
             thisFlag.addClass('hidden');
-        }        
+        }
     }).bind(this)); // end (click flag button)
 }; // end registerFlagButton()
 
@@ -255,11 +250,11 @@ Floorplan.prototype.registerExhibitorHighlightButton = function (exhibitorElemen
         var boothNumberArray = boothNumber.split(',');
 
         // Get highlighted value from element
-        var isHighlighted = exhibitorElement.attr('data-highlighted');
-        
+        var isHighlighted = exhibitorElement.attr('data-highlighted-exhibitor');
+
         // If this element is highlighted, 
         if (isHighlighted === 'true') {
-            exhibitorElement.attr('data-highlighted', 'false');
+            exhibitorElement.attr('data-highlighted-exhibitor', 'false');
             exhibitorElement.attr('data-color-palette', 'color3');
             exhibitorElement.removeClass('highlighted');
 
@@ -270,7 +265,7 @@ Floorplan.prototype.registerExhibitorHighlightButton = function (exhibitorElemen
             }
         } else {
             // element is not highlighted
-            exhibitorElement.attr('data-highlighted', 'true');
+            exhibitorElement.attr('data-highlighted-exhibitor', 'true');
             exhibitorElement.attr('data-color-palette', 'color2');
             exhibitorElement.addClass('highlighted');
 
@@ -287,50 +282,145 @@ Floorplan.prototype.registerExhibitorHighlightButton = function (exhibitorElemen
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
- * Register highlighting function of clicking product from list
+ * Register highlighting / filtering function of clicking product from list
  **/
-Floorplan.prototype.registerProductFilterHighlightButton = function (productFilterElement) {
-    productFilterElement.on('click', (function (event) {
+Floorplan.prototype.registerProductFilterButton = function (productElement) {
+    productElement.on('click', (function (event) {
 
-        
-        // TODO - update with correct logic
-        
-        
-        // Get booth number from element
-        var boothNumber = productFilterElement.attr('data-booth-number');
-
-        // Convert boothNumber to array to handle multiple booths with same company name
-        var boothNumberArray = boothNumber.split(',');
+        // Get product text from element
+        var productText = productElement.text();
 
         // Get highlighted value from element
-        var isHighlighted = productFilterElement.attr('data-highlighted');
-        
-        // If this element is highlighted, 
-        if (isHighlighted === 'true') {
-            productFilterElement.attr('data-highlighted', 'false');
-            productFilterElement.attr('data-color-palette', 'color3');
-            productFilterElement.removeClass('highlighted');
+        var isHighlighted = productElement.attr('data-highlighted-product');
 
-            // Un-highlight booths for all booth numbers in the array
-            for (var i = 0; i < boothNumberArray.length; i++) {
-                var thisBoothNumber = parseInt(boothNumberArray[i]);
-                this.boothElements[thisBoothNumber].removeClass('highlighted');
-            }
-        } else {
-            // element is not highlighted
-            productFilterElement.attr('data-highlighted', 'true');
-            productFilterElement.attr('data-color-palette', 'color2');
-            productFilterElement.addClass('highlighted');
+        // Get array of booth elements for this product
+        var boothsWithThisProduct = this.productsMap[productText];
+
+        
+        /**
+         * If this element is not highlighted,
+         * highlight it and filter the associated products
+         **/
+        if (isHighlighted === 'false') {
+            // Push the last product text on to the stack
+            // TODO: Obsolete?
+            this.productsFilteredStack.push(productText);
+
+            // element is not highlighted, so highlight
+            productElement.attr('data-highlighted-product', 'true');
+            productElement.attr('data-color-palette', 'color4');
+            productElement.addClass('highlighted-product');
 
             // Highlight booths for all booth numbers in the array
-            for (var i = 0; i < boothNumberArray.length; i++) {
-                var thisBoothNumber = parseInt(boothNumberArray[i]);
-                this.boothElements[thisBoothNumber].addClass('highlighted');
+            for (var i = 0; i < boothsWithThisProduct.length; i++) {
+                boothsWithThisProduct[i].addClass('product-filtered');
+            }
+        } else {
+            /**
+             * This element is highlighted, so
+             * un-highlight it and remove the filters
+             * from the associated products
+             **/
+
+            // Pop the last product text off of the stack
+            this.productsFilteredStack.pop();
+            productElement.attr('data-highlighted-product', 'false');
+            productElement.attr('data-color-palette', 'color3');
+            productElement.removeClass('highlighted-product');
+
+            // remove filter booths for all booths in the array
+            for (var i = 0; i < boothsWithThisProduct.length; i++) {
+                boothsWithThisProduct[i].removeClass('product-filtered');
+            }
+
+            // If there are no more filtered items, remove the filtered property from the booths
+            if (this.productsFilteredStack.length === 0) {
+                $('.booth').removeClass('filtered');
+            } else {
+                // If there are more filtered items, go back through and unfilter again
+                for (var key in this.productLiElements) {
+                    if (key !== 'length') {
+                        var highlightedStatus = (this.productLiElements[key]).attr('data-highlighted-product');
+
+                        // Get product text from element
+                        var thisProductText = (this.productLiElements[key]).text();
+
+                        if (highlightedStatus === 'true') {
+                            // Get array pf booth elements for this product
+                            var boothsWithThisProduct = this.productsMap[thisProductText];
+
+                            // Highlight booths for all booth numbers in the array
+                            for (var i = 0; i < boothsWithThisProduct.length; i++) {
+                                boothsWithThisProduct[i].addClass('product-filtered');
+                            }
+                        } // end if (this button is highlighted)
+                    }
+                } // end for (productsMap)
             }
         } // end if-else (product elements are highlighted)
     }).bind(this)); // end (click flag button)
-}; // end registerProductFilterHighlightButton()
+}; // end registerProductFilterButton()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -342,28 +432,30 @@ Floorplan.prototype.registerProductFilterHighlightButton = function (productFilt
 Floorplan.prototype.registerClearAllButton = function () {
     // Exhibitor drawer clear all button
     this.exhibitorClearAllButton.on('click', (function (event) {
-        var highlightedElements = $('.highlighted');
+        var selectedElements = $('.highlighted');
 
-        for (var i = 0; i < highlightedElements.length; i++) {
-            $(highlightedElements[i]).removeClass('highlighted');
-            if ( ($(highlightedElements[i]).attr('data-highlighted')) === 'true') {
-                $(highlightedElements[i]).attr('data-highlighted', 'false');
-                $(highlightedElements[i]).attr('data-color-palette', 'color3');
+        for (var i = 0; i < selectedElements.length; i++) {
+            $(selectedElements[i]).removeClass('highlighted');
+            if (($(selectedElements[i]).attr('data-highlighted-exhibitor')) === 'true') {
+                $(selectedElements[i]).attr('data-highlighted-exhibitor', 'false');
+                $(selectedElements[i]).attr('data-color-palette', 'color3');
             }
         } // end for (all highlighted elements)
     }).bind(this)); // end (click clear all button)
 
-    
-    // Product filter drawer clear all button
-    this.productFilterClearAllButton.on('click', (function (event) {
-        var fadedElements = $('.booth-faded');
 
-        for (var i = 0; i < fadedElements.length; i++) {
-            $(fadedElements[i]).removeClass('booth-faded');
-            if ( ($(fadedElements[i]).attr('data-booth-faded')) === 'true') {
-                $(fadedElements[i]).attr('data-booth-faded', 'false');
-                $(fadedElements[i]).attr('data-color-palette', 'color3');
-            }
+    // Product filter drawer clear all button
+    this.productClearAllButton.on('click', (function (event) {
+        var selectedElements = $('.highlighted-product');
+
+        for (var i = 0; i < selectedElements.length; i++) {
+            selectedElements[i].click();
+
+            //            $(selectedElements[i]).removeClass('booth-faded');
+            //            if (($(selectedElements[i]).attr('data-booth-faded')) === 'true') {
+            //                $(selectedElements[i]).attr('data-booth-faded', 'false');
+            //                $(selectedElements[i]).attr('data-color-palette', 'color3');
+            //            }
         } // end for (all booth-faded elements)
     }).bind(this)); // end (click clear all button)
 }; // end registerClearAllButton()

@@ -24,6 +24,25 @@ body {
     padding-top: 0px;
 }
 
+/* Bad browser alert */
+#browser-alert {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: red;
+    color: white;
+    font-size: 2em;
+    min-height: 4em;
+    text-align: center;
+    z-index: 10000;
+    padding: 1em;
+}
+
+#browser-alert.show {
+    display: block!important;
+}
 
 /*50 + 20*/
 
@@ -240,6 +259,15 @@ a.navbar-brand {
     color: #5c5c5c!important;
 }
 
+a.navbar-brand:focus {
+    color: #5c5c5c!important;
+}
+
+
+
+
+
+
 .navbar-button a:hover {
     color: #2c3e50!important;
     cursor: pointer;
@@ -252,9 +280,20 @@ a.navbar-brand {
 /*    background-color: #000!important;*/
 }
 
-a.navbar-brand:focus {
-    color: #5c5c5c!important;
+#navbar-button-product-list a {}
+
+#navbar-button-product-list {}
+
+#navbar-button-product-list.active {}
+
+#navbar-button-product-list.active a {}
+
+#navbar-button-exhibitor-list.active>a,
+#navbar-button-product-list.active>a {
+    background-image: inherit;
+    color: inherit;
 }
+
 
 /**
  * Modal Styling in addition to Bootstrap's styling
@@ -354,6 +393,7 @@ a.navbar-brand:focus {
     display: inline;
     display: block;
     margin: 0.25em auto;
+    min-width: 28ex;
 }
 
 .exhibitor-li[data-color-palette="color2"]:hover {
@@ -370,7 +410,7 @@ a.navbar-brand:focus {
  * Product filter drawer styles
  **/
 /* Product filter list container (as a Bootstrap panel) */
-#product-filter-list-container {
+#product-list-container {
     z-index: 10;
     display: inline-block;
     position: absolute;
@@ -388,7 +428,7 @@ a.navbar-brand:focus {
     transition: transform 200ms ease-out;
 }
 
-#product-filter-list-container.closed {
+#product-list-container.closed {
     transform: translateX(-100%);
     /* Animations for sliding drawer out. */
     -webkit-transition: transform 200ms ease-out;
@@ -397,7 +437,7 @@ a.navbar-brand:focus {
     transition: transform 200ms ease-out;
 }
 
-#product-filter-list-container .panel-heading {
+#product-list-container .panel-heading {
     /* padding: 1.2em;*/
     text-align: left;
     color: white;
@@ -416,37 +456,58 @@ a.navbar-brand:focus {
     font-size: 1.2em;
 }
 
-#product-filter-clear-all {
+#product-clear-all {
     margin: 0em 1em 0em 1.6em;
 }
 
-#product-filter-list-main-list {
+#product-list-main-list {
     overflow-y: auto;
     overflow-x: hidden;
     display: inline-block;
 }
 
-.product-filter-li {
+.product-li {
     width: 100%;
     display: inline;
     display: block;
+    min-width: 28ex;
     margin: 0.25em auto;
 }
 
-.product-filter-li[data-color-palette="color2"]:hover {
+.product-li[data-color-palette="color2"]:hover {
     color: #e8e8e8;
 }
 
-.product-filter-li.longest-name {
+.product-li.longest-name {
     /* OBSOLETE */
 }
 
-.booth-faded {
-    opacity: 0.3;
+
+/**
+ * Product Filter styles
+ **/
+.product-filtered {
+/*    opacity: 0.4;*/
+    -webkit-box-shadow: 0px 0px 5px 4px #3292D3;
+       -moz-box-shadow: 0px 0px 5px 4px #3292D3;
+            box-shadow: 0px 0px 5px 4px #3292D3; 
 }
-.booth-faded * {
-    opacity: 0.3
+
+/*
+.product-filtered.product-unfiltered {
+    opacity: 1!important;
+    -webkit-box-shadow: unset;
+       -moz-box-shadow: unset;
+            box-shadow: unset;
 }
+
+.product-filtered.product-unfiltered * {
+    opacity: 1!important;
+    -webkit-box-shadow: unset;
+       -moz-box-shadow: unset;
+            box-shadow: unset; 
+}
+*/
 
 /**
 * Booth highlighting styles
@@ -458,12 +519,12 @@ a.navbar-brand:focus {
 }
 
 /*
-li.product-filter-li[data-highlighted="true"] {
+li.product-li[data-highlighted-exhibitor="true"] {
     background-color: yellow;
 }
 */
 
-li.product-filter-li[data-highlighted="false"] {
+li.product-li[data-highlighted-exhibitor="false"] {
 }
 
 

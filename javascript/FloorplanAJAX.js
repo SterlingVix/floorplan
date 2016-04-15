@@ -82,7 +82,7 @@ Floorplan.prototype.getBoothData = function () {
                     tooltip: this.boothXMLElements[i].getAttribute('tooltip'),
                     website: this.boothXMLElements[i].getAttribute('website'), // currently null
                 };
-                
+
                 // TEMPORARY If this condition is met, add a query to the iframe href:
                 if (false) {
                     thisBooth.iframeReference += '?id=' + thisBooth.boothNumber;
@@ -109,36 +109,54 @@ Floorplan.prototype.getBoothData = function () {
 
             /**
              * Now that all the booth data is parsed,
-             * update the length of the exhibitorLiElements,
-             * then sort the array of exhibitor names,
-             * then determine the longest name & add a class
-             * then append elements to exhibitorLiElements,
-             * then register the highlight function on the element.
+             * update the exhibitor and products lists:
+             *
+             * Create an array of products;
+             * Create the productLiElements;
+             * Update the lengths of the productLiElements and exhibitorLiElements;
+             * Sort the arrays of products and exhibitor names;
+             * Append elements to exhibitorLiElements and productLiElements;
+             * Register the highlight function on the element;
              **/
-        
-            // TODO - product filter list here
-        
-        
+
+            // Create array of products
+            for (var key in this.productsMap) {
+                this.productSortedNames.push(key);
+                
+                // Create new productLiElements
+                this.productLiElements[key] = $('<li type="button" class="btn btn-clear product-li" data-highlighted-product="false" data-color-palette="color3">');
+                this.productLiElements[key].text(key);
+            }
+
             this.exhibitorLiElements.length = this.exhibitorSortedNames.length;
+            this.productLiElements.length = this.productSortedNames.length;
+        
             this.exhibitorSortedNames.sort();
+            this.productSortedNames.sort();
 
-            // This name length code is obsolete, but inexpensive, so I'm leaving it.
-            var longestName = this.exhibitorLiElements[this.exhibitorSortedNames[0]];
-
+            /**
+             * This name length code is obsolete, but inexpensive, so I'm leaving it for recovery later if desired.
+             * var longestExhibitorName = this.exhibitorLiElements[this.exhibitorSortedNames[0]];
+             * var longestProductName = this.exhibitorLiElements[this.exhibitorSortedNames[0]];
+             **/
             for (var i = 0, length = this.exhibitorSortedNames.length; i < length; i++) {
-                var lengthOfThisExhibitorsName = ((this.exhibitorLiElements[this.exhibitorSortedNames[i]]).text().length);
-
-                if (lengthOfThisExhibitorsName > (longestName.text().length)) {
-                    // console.log('updating longest name from', (longestName.text()), ',', longestName.text().length, 'to', (this.exhibitorLiElements[this.exhibitorSortedNames[i]]).text(), ',', (this.exhibitorLiElements[this.exhibitorSortedNames[i]]).text().length);
-                    longestName.removeClass('longest-name');
-                    longestName = this.exhibitorLiElements[this.exhibitorSortedNames[i]];
-                    longestName.addClass('longest-name');
-                }
+                /**
+                 * var lengthOfThisExhibitorsName = ((this.exhibitorLiElements[this.exhibitorSortedNames[i]]).text().length);
+                 * if (lengthOfThisExhibitorsName > (longestExhibitorName.text().length)) {
+                 *   longestExhibitorName.removeClass('longest-name');
+                 *   longestExhibitorName = this.exhibitorLiElements[this.exhibitorSortedNames[i]];
+                 *   longestExhibitorName.addClass('longest-name');
+                 * }
+                 **/
                 this.exhibitorUnorderedListElement.append(this.exhibitorLiElements[this.exhibitorSortedNames[i]]);
                 this.registerExhibitorHighlightButton((this.exhibitorLiElements[this.exhibitorSortedNames[i]]));
             }; // end for (exhibitorSortedNames)
-
-
+        
+            for (var i = 0; i < this.productSortedNames.length; i++) {   
+                this.productUnorderedListElement.append(this.productLiElements[this.productSortedNames[i]]);
+                this.registerProductFilterButton((this.productLiElements[this.productSortedNames[i]]));
+            }; // end for (productSortedNames)
+        
         }).bind(this))
         .done((function (floorPlanXML, status, jqxhr) {
             // Register all events
